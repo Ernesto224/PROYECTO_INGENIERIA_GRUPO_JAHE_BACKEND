@@ -1,0 +1,6 @@
+@_2025_GRUPO_JAHE_BACKEND_HostAddress = http://localhost:5089
+
+GET {{_2025_GRUPO_JAHE_BACKEND_HostAddress}}/weatherforecast/
+Accept: application/json
+
+###
