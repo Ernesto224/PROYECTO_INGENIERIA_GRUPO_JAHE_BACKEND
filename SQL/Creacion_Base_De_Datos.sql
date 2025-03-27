@@ -1,4 +1,6 @@
-﻿-- Eliminar tablas si existen (para recrearlas limpiamente)
+﻿USE DB_Pruebas_C08380;
+
+-- Eliminar tablas si existen (para recrearlas limpiamente)
 DROP TABLE IF EXISTS 
 Imagen_SobreNosotros, 
 Reserva, 
@@ -28,13 +30,13 @@ CREATE TABLE Contacto (
 -- Tabla Direccion
 CREATE TABLE Direccion (
     IdDireccion INT PRIMARY KEY IDENTITY(1,1),
-    Descripcion VARCHAR(255)
+    Descripcion NVARCHAR(MAX)
 );
 
 -- Tabla Imagen
 CREATE TABLE Imagen (
     IdImagen INT PRIMARY KEY IDENTITY(1,1),
-    [Url] VARCHAR(255),
+    [Url] NVARCHAR(MAX),
     Eliminado BIT DEFAULT 0
 );
 
@@ -48,7 +50,7 @@ CREATE TABLE Home (
 -- Tabla Facilidades
 CREATE TABLE Facilidades (
     IdFacilidad INT PRIMARY KEY IDENTITY(1,1),
-    Descripcion VARCHAR(255),
+    Descripcion NVARCHAR(MAX),
     IdImagen INT FOREIGN KEY REFERENCES Imagen(IdImagen)
 );
 
@@ -63,7 +65,7 @@ CREATE TABLE Publicidad (
 -- Tabla SobreNosotros
 CREATE TABLE SobreNosotros (
     IdSobreNosotros INT PRIMARY KEY IDENTITY(1,1),
-    Descripcion VARCHAR(255)
+    Descripcion NVARCHAR(MAX)
 );
 
 -- Tabla Imagen_SobreNosotros (relación entre Imagen y SobreNosotros)
@@ -77,7 +79,7 @@ CREATE TABLE Imagen_SobreNosotros (
 CREATE TABLE TipoDeHabitacion (
     IdTipoDeHabitacion INT PRIMARY KEY IDENTITY(1,1),
     Nombre VARCHAR(20),
-    Descripcion VARCHAR(255),
+    Descripcion NVARCHAR(MAX),
     TarifaDiaria DECIMAL(10,2),
     IdImagen INT FOREIGN KEY REFERENCES Imagen(IdImagen)
 );

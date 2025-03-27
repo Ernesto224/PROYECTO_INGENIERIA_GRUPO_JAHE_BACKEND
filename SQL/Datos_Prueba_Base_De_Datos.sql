@@ -1,7 +1,7 @@
 ﻿-- Insertar datos en la tabla Imagen
 INSERT INTO Imagen ([Url], Eliminado) 
 VALUES 
-('https://res.cloudinary.com/dks1ifnxa/image/upload/v1717887282/samples/landscapes/beach-boat.jpg', 0);
+('https://res.cloudinary.com/dks1ifnxa/image/upload/v1743058256/1642576565_jusr_right_uvhlyf.jpg', 0);
 
 -- Insertar datos en la tabla Home usando los IdImagen insertados
 INSERT INTO Home (Descripcion, IdImagen) 
