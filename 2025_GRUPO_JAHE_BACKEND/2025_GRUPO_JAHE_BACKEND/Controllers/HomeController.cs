@@ -1,4 +1,6 @@
-﻿using Dominio.Entidades;
+﻿using Aplicacion.DTOs;
+using Aplicacion.Interfaces;
+using Dominio.Entidades;
 using Dominio.Interfaces;
 using Microsoft.AspNetCore.Mvc;
 using System.Threading.Tasks;
@@ -11,44 +13,47 @@ namespace _2025_GRUPO_JAHE_BACKEND.Controllers
     [ApiController]
     public class HomeController : ControllerBase
     {
-        private readonly IHomeRepositorio _homeRepositorio;
+        private readonly IHomeServicio _homeServicio;
 
-        public HomeController(IHomeRepositorio homeRepositorio)
+        public HomeController(IHomeServicio homeServicio)
         {
-            this._homeRepositorio = homeRepositorio;
-        }
-
-        // GET: api/<HomeController>
-        [HttpGet]
-        public IEnumerable<string> Get()
-        {
-            return new string[] { "value1", "value2" };
+            this._homeServicio = homeServicio;
         }
 
         // GET api/<HomeController>/5
-        [HttpGet("{id}")]
-        public async Task<Home> Get(int id)
+        [HttpGet]
+        public async Task<ActionResult<HomeDTO>> Get()
         {
-            var home = await this._homeRepositorio.VerDatosDeHome();
-            return home;
-        }
+            try
+            {
+                var HomeDTO = await this._homeServicio.VerDatosDeHome();
 
-        // POST api/<HomeController>
-        [HttpPost]
-        public void Post([FromBody] string value)
-        {
+                if (HomeDTO == null)
+                    return NotFound("No se encontraron datos.");
+
+                return Ok(HomeDTO);
+            }
+            catch (Exception ex)
+            {
+                return NotFound(ex.Message);
+            }
         }
 
         // PUT api/<HomeController>/5
-        [HttpPut("{id}")]
-        public void Put(int id, [FromBody] string value)
+        [HttpPut]
+        public async Task<ActionResult<object>> Put(HomeModificarDTO homeModificarDTO)
         {
-        }
+            try
+            {
+                var resultado = await this._homeServicio.ModificarDatosDeHome(homeModificarDTO);
 
-        // DELETE api/<HomeController>/5
-        [HttpDelete("{id}")]
-        public void Delete(int id)
-        {
+                return Ok(resultado);
+            }
+            catch (Exception ex)
+            {
+                return NotFound(ex.Message);
+            }
         }
+      
     }
 }
