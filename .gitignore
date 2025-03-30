@@ -71,18 +71,6 @@ User-specific files
 *.userosscache
 *.sln.docstates
 
-Blazor specific
-*.razor.g.cs
-*.razor.g.i.cs
-*.razor.g.cs.map
-*.razor.g.i.cs.map
-
-DocumentLayout.json (si es un archivo de configuración local)
-*DocumentLayout.json
-
-project.razor.vs.bin (archivo específico de Visual Studio para Razor)
-*.razor.vs.bin
-
 .NET Core
 project.lock.json
 project.fragment.lock.json
