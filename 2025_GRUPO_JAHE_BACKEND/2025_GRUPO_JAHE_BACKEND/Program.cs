@@ -34,7 +34,8 @@ builder.Services.AddScoped<IPublicidadRepositorio, PublicidadRepositorio>();
 builder.Services.AddScoped<IPublicidadServicio, PublicidadServicio>();
 builder.Services.AddScoped<ISobreNosotrosServicio, SobreNosotrosServicio>();
 builder.Services.AddScoped<ISobreNosotrosRepositorio, SobreNosotrosRepositorio>();
-
+builder.Services.AddScoped<IContactoRepositorio, ContactoRepositorio>();
+builder.Services.AddScoped<IContactoServicio, ContactoServicio>();
 // Se optiene la URL de Cloudinary del archivo appsettings.json
 var cloudinaryUrl = builder.Configuration.GetSection("Cloudinary").GetSection("Url").Value;
 // Se agrega el servicio de almacenamiento de imagenes a la inyección de dependencias

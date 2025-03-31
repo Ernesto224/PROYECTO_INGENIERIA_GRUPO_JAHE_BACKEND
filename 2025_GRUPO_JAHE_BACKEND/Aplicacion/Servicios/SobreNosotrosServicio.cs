@@ -20,7 +20,6 @@ namespace Aplicacion.Servicios
         }
         public async Task<SobreNosotrosDTO> VerDatosSobreNosotros()
         {
-            Console.WriteLine("Service");
             var sobreNosotros = await _sobreNosotrosRepositorio.VerDatosSobreNosotros();
 
             if (sobreNosotros == null)

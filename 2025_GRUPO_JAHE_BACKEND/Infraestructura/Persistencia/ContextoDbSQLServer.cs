@@ -22,6 +22,7 @@ namespace Infraestructura.Persistencia
         public DbSet<Publicidad> Publicidades { get; set; }
 
         public DbSet<Oferta> Ofertas { get; set; }
+        public DbSet<Contacto> Contactos { get; set; }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
