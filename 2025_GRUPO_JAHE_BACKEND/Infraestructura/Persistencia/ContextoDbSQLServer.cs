@@ -29,6 +29,9 @@ namespace Infraestructura.Persistencia
 
             // Aplicar configuraciones personalizadas si es necesario
             modelBuilder.ApplyConfigurationsFromAssembly(typeof(ContextoDbSQLServer).Assembly);
+            modelBuilder.Entity<Imagen_SobreNosotros>()
+            .HasKey(isn => new { isn.IdImagen, isn.IdSobreNosotros });
+
         }
     }
 }

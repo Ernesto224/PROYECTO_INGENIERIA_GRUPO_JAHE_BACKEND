@@ -13,11 +13,11 @@ namespace Dominio.Entidades
     {
         [Key]
         [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
+        [Column("IdSobreNosotros")]
         public int IdSobreNosotros { get; set; }
 
-        [Required]
-        [MaxLength(int.MaxValue)]
-        public string Descripcion { get; set; } = string.Empty;
+        [Column("Descripcion", TypeName = "nvarchar(max)")]
+        public string Descripcion { get; set; }
 
         public ICollection<Imagen_SobreNosotros> ImagenesSobreNosotros { get; set; }
     }

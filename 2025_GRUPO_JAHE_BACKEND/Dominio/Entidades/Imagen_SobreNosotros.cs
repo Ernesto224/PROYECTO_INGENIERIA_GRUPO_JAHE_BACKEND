@@ -11,10 +11,6 @@ namespace Dominio.Entidades
     [Table("Imagen_SobreNosotros")]
     public class Imagen_SobreNosotros
     {
-        [Key]
-        [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
-        public int Id { get; set; }
-
         [ForeignKey("SobreNosotros")]
         public int IdSobreNosotros { get; set; }
         public SobreNosotros SobreNosotros { get; set; }

@@ -10,6 +10,5 @@ namespace Dominio.Interfaces
     public interface ISobreNosotrosRepositorio
     {
         public Task<SobreNosotros> VerDatosSobreNosotros();
-        public Task<SobreNosotros> ObtenerConImagenesAsync();
     }
 }

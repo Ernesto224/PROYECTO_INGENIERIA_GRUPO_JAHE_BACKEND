@@ -26,7 +26,7 @@ namespace _2025_GRUPO_JAHE_BACKEND.Controllers
             }
             catch (Exception ex)
             {
-                return StatusCode(500, "Error interno del servidor");
+                return StatusCode(500, "Error en al base de datos");
             }
         }
     }

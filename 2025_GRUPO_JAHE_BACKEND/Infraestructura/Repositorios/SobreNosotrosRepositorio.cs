@@ -22,10 +22,32 @@ namespace Infraestructura.Repositorios
 
         public async Task<SobreNosotros> VerDatosSobreNosotros()
         {
-            return await _contexto.SobreNosotros
-                .Include(sn => sn.ImagenesSobreNosotros)
-                .ThenInclude(isn => isn.Imagen)
-                .FirstOrDefaultAsync();
+            try
+            {
+                Console.WriteLine("Repository - Obteniendo datos de SobreNosotros");
+
+                var resultado = await _contexto.SobreNosotros
+                    .Include(sn => sn.ImagenesSobreNosotros)
+                    .ThenInclude(isn => isn.Imagen)
+                    .FirstOrDefaultAsync();
+
+                if (resultado == null)
+                {
+                    Console.WriteLine("Repository - No se encontraron registros de SobreNosotros");
+                }
+
+                return resultado;
+            }
+            catch (InvalidOperationException ex)
+            {
+                Console.WriteLine($"Repository - Error de operación inválida: {ex.Message}");
+                throw new Exception("Error en la consulta a la base de datos", ex);
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"Repository - Error inesperado: {ex.Message}");
+                throw new Exception("Error al obtener los datos de SobreNosotros", ex);
+            }
         }
     }
 }
