@@ -17,8 +17,8 @@ namespace Aplicacion.Servicios
 
         public HomeServicio(IHomeRepositorio homeRepositorio, IServicioAlmacenamientoImagenes servicioAlmacenamientoImagenes)
         {
-            _homeRepositorio = homeRepositorio;
-            _servicioAlmacenamientoImagenes = servicioAlmacenamientoImagenes;
+            this._homeRepositorio = homeRepositorio;
+            this._servicioAlmacenamientoImagenes = servicioAlmacenamientoImagenes;
         }
 
         public async Task<object> ModificarDatosDeHome(HomeModificarDTO homeModificarDTO)

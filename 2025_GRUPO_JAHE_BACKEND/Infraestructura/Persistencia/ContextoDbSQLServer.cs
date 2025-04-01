@@ -17,6 +17,11 @@ namespace Infraestructura.Persistencia
         // Definir DbSets para las entidades
         public DbSet<Imagen> Imagenes { get; set; }
         public DbSet<Home> Homes { get; set; }
+        public DbSet<Facilidad> Facilidades { get; set; }
+
+        public DbSet<Publicidad> Publicidades { get; set; }
+
+        public DbSet<Oferta> Ofertas { get; set; }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
