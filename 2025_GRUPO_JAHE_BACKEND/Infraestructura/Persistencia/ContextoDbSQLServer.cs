@@ -17,6 +17,13 @@ namespace Infraestructura.Persistencia
         // Definir DbSets para las entidades
         public DbSet<Imagen> Imagenes { get; set; }
         public DbSet<Home> Homes { get; set; }
+        public DbSet<SobreNosotros> SobreNosotros { get; set; }
+        public DbSet<Facilidad> Facilidades { get; set; }
+
+        public DbSet<Publicidad> Publicidades { get; set; }
+
+        public DbSet<Oferta> Ofertas { get; set; }
+        public DbSet<Contacto> Contactos { get; set; }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
@@ -24,6 +31,9 @@ namespace Infraestructura.Persistencia
 
             // Aplicar configuraciones personalizadas si es necesario
             modelBuilder.ApplyConfigurationsFromAssembly(typeof(ContextoDbSQLServer).Assembly);
+            modelBuilder.Entity<Imagen_SobreNosotros>()
+            .HasKey(isn => new { isn.IdImagen, isn.IdSobreNosotros });
+
         }
     }
 }
