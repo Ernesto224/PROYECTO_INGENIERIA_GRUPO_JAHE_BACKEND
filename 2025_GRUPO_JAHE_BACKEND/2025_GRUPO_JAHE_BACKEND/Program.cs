@@ -29,6 +29,8 @@ builder.Services.AddDbContext<ContextoDbSQLServer>(options => options.UseSqlServ
 // Add services to the container.
 builder.Services.AddScoped<IHomeRepositorio, HomeRepositorio>();
 builder.Services.AddScoped<IHomeServicio, HomeServicio>();
+builder.Services.AddScoped<IFacilidadRepositorio, FacilidadRepositorio>();
+builder.Services.AddScoped<IFacilidadServicio, FacilidadServicio>();
 
 builder.Services.AddScoped<IPublicidadRepositorio, PublicidadRepositorio>();
 builder.Services.AddScoped<IPublicidadServicio, PublicidadServicio>();
