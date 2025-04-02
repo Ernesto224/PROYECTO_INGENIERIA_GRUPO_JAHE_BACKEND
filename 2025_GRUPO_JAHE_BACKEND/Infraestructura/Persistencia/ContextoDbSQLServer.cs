@@ -25,6 +25,8 @@ namespace Infraestructura.Persistencia
         public DbSet<Oferta> Ofertas { get; set; }
         public DbSet<Contacto> Contactos { get; set; }
 
+        public DbSet<TipoDeHabitacion> tipoDeHabitacion { get; set; }
+
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             base.OnModelCreating(modelBuilder);
