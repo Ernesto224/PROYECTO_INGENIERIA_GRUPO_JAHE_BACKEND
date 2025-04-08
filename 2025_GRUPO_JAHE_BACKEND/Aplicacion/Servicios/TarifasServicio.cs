@@ -64,6 +64,7 @@ namespace Aplicacion.Servicios
                     IdTipoDeHabitacion = tipoDeHabitacionModificarDTO.IdTipoDeHabitacion,
                     Nombre = tipoDeHabitacionModificarDTO.Nombre,
                     Descripcion = tipoDeHabitacionModificarDTO.Descripcion,
+                    TarifaDiaria = tipoDeHabitacionModificarDTO.TarifaDiaria,
                     Imagen = null
                 };
 
