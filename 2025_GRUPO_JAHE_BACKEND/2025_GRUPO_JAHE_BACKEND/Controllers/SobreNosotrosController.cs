@@ -29,5 +29,15 @@ namespace _2025_GRUPO_JAHE_BACKEND.Controllers
                 return StatusCode(500, "Error en al base de datos");
             }
         }
+        [HttpPost]
+        public async Task<ActionResult<SobreNosotrosDTO>> CambiarTextoSobreNosotros(SobreNosotrosDTO sobreNosotrosDTO)
+        {
+            var sobreNosotrosActualizado = await _sobreNosotrosServicio.CambiarTextoSobreNosotros(sobreNosotrosDTO);
+            if (sobreNosotrosActualizado != null)
+            {
+                return Ok(sobreNosotrosActualizado);
+            }
+            return BadRequest("Hubo un error en el servicio");
+        }
     }
 }
