@@ -35,7 +35,7 @@ namespace Infraestructura.Repositorios
             var HabitacionDisponible = await _contexto.Habitaciones
                 .Include(h => h.TipoDeHabitacion)
                 .Where(h => h.IdTipoDeHabitacion == idTipoHabitacion &&
-                            h.Estado != EstadoDeHabitacion.NO_DISP.ToString())
+                            (h.Estado != EstadoDeHabitacion.NO_DISP.ToString() && h.Estado != EstadoDeHabitacion.OCUPADA.ToString()))
                 .Where(h => !_contexto.Reservas.Any(r =>
                     r.IdHabitacion == h.IdHabitacion &&
                     r.Activo &&
@@ -50,10 +50,27 @@ namespace Infraestructura.Repositorios
             }
             else
             {
-                HabitacionDisponible.Estado = "OCUPADA";
+                HabitacionDisponible.Estado = EstadoDeHabitacion.OCUPADA.ToString();
+                await this._contexto.SaveChangesAsync();
                 return HabitacionDisponible;
             }
 
+        }
+
+        public async Task<Habitacion> VerHabitacion(int idHabitacion)
+        {
+            var habitacion = await _contexto.Habitaciones
+                .Include(h => h.TipoDeHabitacion)
+                .FirstOrDefaultAsync(h => h.IdHabitacion == idHabitacion);
+
+            if (habitacion == null)
+            {
+                return null;
+            }
+            else
+            {
+                return habitacion;
+            }
         }
 
         public async Task<Transaccion> RealizarTransaccion(decimal monto, string descripcion)
@@ -77,9 +94,39 @@ namespace Infraestructura.Repositorios
             return 0;
         }
 
-        public Task<bool> CambiarEstadoHabitacion(Habitacion habitacion, string estadoNuevo)
+        public async Task<bool> CambiarEstadoHabitacion(int idHabitacion, string estadoNuevo)
         {
-            return this.CambiarEstadoHabitacion(habitacion, estadoNuevo);
+            var habitacion = await this.VerHabitacion(idHabitacion);
+
+            habitacion.Estado = estadoNuevo;
+
+            await this._contexto.SaveChangesAsync();
+
+            return true;
+        }
+
+        public Task<List<TipoDeHabitacion>> VerTiposDeHabitacion()
+        {
+            var tiposDeHabitacion = _contexto.TipoDeHabitaciones.ToListAsync();
+
+            return tiposDeHabitacion;
+        }
+
+        public Task<Cliente> VerCliente(string email)
+        {
+            var cliente = _contexto.Clientes.FirstOrDefaultAsync(c => c.Email == email);
+            return cliente;
+        }
+
+        public async Task<List<Oferta>> VerOfertasAplicables(int idTipoDeHabitacion, DateTime fechaLlegada, DateTime fechaSalida)
+        {
+            var ofertasAplicables = await _contexto.Ofertas
+                .Where(o => o.Activo &&
+                   o.IdTipoDeHabitacion == idTipoDeHabitacion &&
+                   !(fechaSalida < o.FechaInicio || fechaLlegada > o.FechaFinal))
+                .ToListAsync();
+
+            return ofertasAplicables;
         }
     }
 }

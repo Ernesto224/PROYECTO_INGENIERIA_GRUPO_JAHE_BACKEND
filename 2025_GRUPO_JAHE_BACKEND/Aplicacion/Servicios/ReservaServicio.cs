@@ -26,107 +26,124 @@ namespace Aplicacion.Servicios
             this._transaction = transaction;
         }
 
-        public async Task<bool> RealizarReserva(ReservaDTO reservaDTO, ClienteDTO clienteDTO, HabitacionDTO habitacionDTO)
+        public async Task<bool> RealizarReserva(List<ReservaDTO> reservasDTO, ClienteDTO clienteDTO)
         {
-            // recuperar email del cliente para verificar
-
             try
             {
                 await this._transaction.BeginTransactionAsync();
 
-                // 1. mapear la habitacion y cambiar su estado
-                var habitacion = new Habitacion
+                // reconocer cliente, si no existe crear uno nuevo
+                var cliente = await this._repositorio.VerCliente(clienteDTO.Email);
+                if (cliente == null)
                 {
-                    IdHabitacion = habitacionDTO.IdHabitacion,
-                    IdTipoDeHabitacion = habitacionDTO.IdTipoDeHabitacion,
-                    Estado = EstadoDeHabitacion.DISPONIBLE.ToString(),
-                    TipoDeHabitacion = new TipoDeHabitacion
+                    cliente = new Cliente
                     {
-                        IdTipoDeHabitacion = habitacionDTO.TipoDeHabitacion.IdTipoDeHabitacion,
-                        Nombre = habitacionDTO.TipoDeHabitacion.Nombre,
-                        Descripcion = habitacionDTO.TipoDeHabitacion.Descripcion,
-                        TarifaDiaria = habitacionDTO.TipoDeHabitacion.TarifaDiaria
-                    }
-                };
-
-                if (await this._repositorio.CambiarEstadoHabitacion(habitacion, EstadoDeHabitacion.RESERVADA.ToString()) == false)
-                {
-                    await this._transaction.RollbackAsync();
-                    return false;
+                        Nombre = clienteDTO.Nombre,
+                        Apellidos = clienteDTO.Apellidos,
+                        Email = clienteDTO.Email,
+                        TarjetaDePago = clienteDTO.TarjetaDePago
+                    };
                 }
 
-                // 2. calcular monto y luego ofertas
-                TimeSpan diferencia = reservaDTO.FechaSalida - reservaDTO.FechaLlegada;
-                int cantidadDias = (int)diferencia.TotalDays;
-                
-                decimal montoPagar = (decimal)(habitacion.TipoDeHabitacion.TarifaDiaria) * (cantidadDias);
+                decimal montoTotal = 0; 
 
-                // 3. realizar transaccion en la tabla
-                var transaccion = await this._repositorio.RealizarTransaccion(montoPagar, "descriptionTest");
+                // calcular el monto total
+                foreach (ReservaDTO reservaDTO in reservasDTO)
+                {
+                    var habitacion = await this._repositorio.VerHabitacion(reservaDTO.IdHabitacion);
+                    TimeSpan diferencia = reservaDTO.FechaSalida - reservaDTO.FechaLlegada;
+                    int cantidadDias = (int)diferencia.TotalDays;
+                    montoTotal += (decimal)habitacion.TipoDeHabitacion.TarifaDiaria * cantidadDias;
+                }
+
+                // crear transaccion
+                var transaccion = await this._repositorio.RealizarTransaccion(montoTotal, "test");
                 if (transaccion == null)
                 {
                     await this._transaction.RollbackAsync();
                     return false;
                 }
 
-                // 4. crear los datos de la reserva con la habitacion generada y la transaccion realizada
-                var reserva = new Reserva
+                // insertar las reservas
+                foreach (ReservaDTO reservaDTO in reservasDTO)
                 {
-                    FechaLlegada = reservaDTO.FechaLlegada,
-                    FechaSalida = reservaDTO.FechaSalida,
-                    Estado = EstadoDeReserva.CONFIRMADA.ToString(),
-                    Activo = true,
-                    Cliente = new Cliente
+                    var habitacion = await this._repositorio.VerHabitacion(reservaDTO.IdHabitacion);
+
+                    if (!await this._repositorio.CambiarEstadoHabitacion(habitacion.IdHabitacion, EstadoDeHabitacion.RESERVADA.ToString()))
                     {
-                        Nombre = clienteDTO.Nombre,
-                        Apellidos = clienteDTO.Apellidos,
-                        Email =clienteDTO.Email,
-                        TarjetaDePago = clienteDTO.TarjetaDePago
-                    },
-                    Habitacion = habitacion,
-                    Transaccion = transaccion
+                        await this._transaction.RollbackAsync();
+                        return false;
+                    }
 
-                };
+                    var reserva = new Reserva
+                    {
+                        FechaLlegada = reservaDTO.FechaLlegada,
+                        FechaSalida = reservaDTO.FechaSalida,
+                        Estado = EstadoDeReserva.CONFIRMADA.ToString(),
+                        Activo = true,
+                        Cliente = cliente,
+                        Habitacion = habitacion,
+                        Transaccion = transaccion
+                    };
 
-                // 5. guardar la reserva
-                if (await this._repositorio.RealizarReserva(reserva) == false)
-                {
-                    await this._transaction.RollbackAsync();
-                    return false;
+                    if (!await this._repositorio.RealizarReserva(reserva))
+                    {
+                        await this._transaction.RollbackAsync();
+                        return false;
+                    }
                 }
-          
 
-                // 6. commit
                 await this._transaction.CommitAsync();
-
                 return true;
-
             }
             catch (Exception ex)
             {
                 await this._transaction.RollbackAsync();
                 return false;
             }
-
         }
 
         public async Task<HabitacionDTO> VerHabitacionDisponible(ReservaDTO reservaDTO)
         {
             var habitacion = await _repositorio.VerHabitacionDisponible(reservaDTO.IdTipoDeHabitacion, reservaDTO.FechaLlegada, reservaDTO.FechaSalida);
 
+            if(habitacion == null)
+            {
+                return null;
+            }
+
+
             return new HabitacionDTO
             {
                 IdHabitacion = habitacion.IdHabitacion,
                 IdTipoDeHabitacion = habitacion.IdTipoDeHabitacion,
-                Estado = habitacion.Estado,
+                Numero = habitacion.Numero,
                 TipoDeHabitacion = new TipoDeHabitacionDTO
                 {
                     IdTipoDeHabitacion = habitacion.TipoDeHabitacion.IdTipoDeHabitacion,
                     Nombre = habitacion.TipoDeHabitacion.Nombre,
-                    Descripcion = habitacion.TipoDeHabitacion.Descripcion,
-                    TarifaDiaria = habitacion.TipoDeHabitacion.TarifaDiaria
-                }
+                    TarifaDiaria = habitacion.TipoDeHabitacion.TarifaDiaria 
+                },
             };
+        }
+
+        public async Task<bool> CambiarEstadoHabitacion(int idHabitacion, string nuevoEstado)
+        {
+            return await this._repositorio.CambiarEstadoHabitacion(idHabitacion, nuevoEstado);
+        }
+
+        public async Task<List<TipoDeHabitacionDTO>> VerTiposDeHabitacion()
+        {
+            var tiposDeHabitacionDTO = new List<TipoDeHabitacionDTO>();
+
+            tiposDeHabitacionDTO = (await this._repositorio.VerTiposDeHabitacion()).Select(t => new TipoDeHabitacionDTO
+            {
+                IdTipoDeHabitacion = t.IdTipoDeHabitacion,
+                Nombre = t.Nombre,
+                TarifaDiaria = t.TarifaDiaria
+            }).ToList();
+
+            return tiposDeHabitacionDTO;
         }
     }
 }

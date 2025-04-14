@@ -8,10 +8,9 @@ namespace Aplicacion.DTOs
 {
     public class ReservaCompletaDTO
     {
-        public ReservaDTO ReservaDTO { get; set; }
+        public List<ReservaDTO> ReservasDTO { get; set; }
 
         public ClienteDTO ClienteDTO { get; set; }
 
-        public HabitacionDTO HabitacionDTO { get; set; }
     }
 }

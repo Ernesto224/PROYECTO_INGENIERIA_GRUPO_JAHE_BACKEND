@@ -18,5 +18,7 @@ namespace Aplicacion.DTOs
 
         public int IdTipoDeHabitacion { get; set; }
 
+        public int IdHabitacion { get; set; }
+
     }
 }

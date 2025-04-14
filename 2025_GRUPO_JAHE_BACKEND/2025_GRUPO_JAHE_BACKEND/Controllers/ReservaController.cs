@@ -18,13 +18,13 @@ namespace _2025_GRUPO_JAHE_BACKEND.Controllers
         [HttpPost]
         public async Task<ActionResult<bool>> AgregarReserva(ReservaCompletaDTO reservaCompletaDTO)
         {
-            if (reservaCompletaDTO.ReservaDTO == null)
+            if (reservaCompletaDTO.ReservasDTO == null)
             {
-                return BadRequest("Reserva no puede ser nulo");
+                return BadRequest("Reservas no puede ser nulo");
             }
 
 
-            var resultado = await reservaServicio.RealizarReserva(reservaCompletaDTO.ReservaDTO, reservaCompletaDTO.ClienteDTO, reservaCompletaDTO.HabitacionDTO);
+            var resultado = await reservaServicio.RealizarReserva(reservaCompletaDTO.ReservasDTO, reservaCompletaDTO.ClienteDTO);
 
             if (resultado)
             {
@@ -52,7 +52,38 @@ namespace _2025_GRUPO_JAHE_BACKEND.Controllers
             }
             else
             {
-                return NotFound("No hay habitaciones disponibles");
+                return Ok("No hay habitaciones disponibles");
+            }
+        }
+
+        [HttpPut]
+        public async Task<ActionResult<bool>> CambiarEstadoHabitacion(int idHabitacion, string nuevoEstado)
+        {
+            var resultado = await this.reservaServicio.CambiarEstadoHabitacion(idHabitacion, nuevoEstado);
+
+            if (resultado == true)
+            {
+                return Ok(resultado);
+            }
+            else
+            {
+                return NotFound();
+            }
+        }
+
+        [HttpGet]
+        [Route("tipos-de-habitacion")]
+        public async Task<ActionResult<List<TipoDeHabitacionDTO>>> VerTiposDeHabitacion()
+        {
+            var resultado = await this.reservaServicio.VerTiposDeHabitacion();
+
+            if (resultado != null)
+            {
+                return Ok(resultado);
+            }
+            else
+            {
+                return NotFound();
             }
         }
     }
