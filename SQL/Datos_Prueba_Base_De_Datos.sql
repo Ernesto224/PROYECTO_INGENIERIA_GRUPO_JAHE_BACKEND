@@ -12,3 +12,22 @@ VALUES
 INSERT INTO Facilidades (Descripcion, IdImagen) VALUES('Puede relajarse en nuestra piscina al aire libre, ideal para refrescarse en un ambiente tranquilo. Deléitese con una exquisita selección de platillos locales e internacionales en nuestro restaurante, acompañado de bebidas refrescantes en el bar', 3)
 
 INSERT INTO Facilidades (Descripcion, IdImagen) VALUES('le ofrecemos Wi-Fi gratuito de alta velocidad en todas las áreas del hotel para que siempre esté conectado. Si desea mantener su rutina de ejercicios, nuestro gimnasio totalmente equipado está disponible para su comodidad', 1)
+
+INSERT INTO Habitacion (Numero, Estado, IdTipoDeHabitacion)
+VALUES 
+(1, 'Disponible', 1),
+(2, 'En reserva', 1),
+(3, 'Reservado', 1),
+(4, 'No disp', 1),
+(5, 'Disponible', 2),
+(6, 'En reserva', 2),
+(7, 'Reservado', 2),
+(8, 'No disp', 2),
+(9, 'Disponible', 3),
+(10, 'En reserva', 3),
+(11, 'Reservado', 3),
+(12, 'No disp', 3),
+(13, 'Disponible', 4),
+(14, 'En reserva', 4),
+(15, 'Reservado', 4),
+(16, 'No disp', 4)

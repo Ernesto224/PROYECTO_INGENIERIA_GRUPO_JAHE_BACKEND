@@ -20,7 +20,7 @@ builder.Services.AddCors(options =>
     });
 });
 
-// Obtener la cadena de conexión del archivo appsettings.json
+// Obtener la cadena de conexiï¿½n del archivo appsettings.json
 var connectionString = builder.Configuration.GetConnectionString("DBSomee.com");
 
 // Configurar Entity Framework Core con SQL Server
@@ -33,6 +33,8 @@ builder.Services.AddScoped<IFacilidadRepositorio, FacilidadRepositorio>();
 builder.Services.AddScoped<IFacilidadServicio, FacilidadServicio>();
 builder.Services.AddScoped<ITarifasRepositorio, TarifasRepositorio>();
 builder.Services.AddScoped<ITarifasServicio, TarifasServicio>();
+builder.Services.AddScoped<IEstadoHabitacionRepositorio, EstadoHabitacionRepositorio>();
+builder.Services.AddScoped<IEstadoHabitacionServicio, EstadoHabitacionServicio>();
 
 builder.Services.AddScoped<IPublicidadRepositorio, PublicidadRepositorio>();
 builder.Services.AddScoped<IPublicidadServicio, PublicidadServicio>();
@@ -42,9 +44,15 @@ builder.Services.AddScoped<IContactoRepositorio, ContactoRepositorio>();
 builder.Services.AddScoped<IContactoServicio, ContactoServicio>();
 builder.Services.AddScoped<IDireccionRepositorio, DireccionRepositorio>();
 builder.Services.AddScoped<IDireccionServicio, DireccionServicio>();
+
+builder.Services.AddScoped<IReservaServicio, ReservaServicio>();
+builder.Services.AddScoped<IReservaRepositorio, ReservaRepositorio>();
+
+builder.Services.AddScoped<ITransactionMethods, TransactionMethods>();
+
 // Se optiene la URL de Cloudinary del archivo appsettings.json
 var cloudinaryUrl = builder.Configuration.GetSection("Cloudinary").GetSection("Url").Value;
-// Se agrega el servicio de almacenamiento de imagenes a la inyección de dependencias
+// Se agrega el servicio de almacenamiento de imagenes a la inyecciï¿½n de dependencias
 builder.Services.AddScoped<IServicioAlmacenamientoImagenes>(servicioImagenes => new CloudinaryAlmacenamientoImagen(cloudinaryUrl!));
 
 builder.Services.AddControllers();

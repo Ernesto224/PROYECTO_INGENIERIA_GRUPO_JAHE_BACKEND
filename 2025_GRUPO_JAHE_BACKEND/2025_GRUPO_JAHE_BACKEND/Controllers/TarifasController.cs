@@ -36,6 +36,21 @@ namespace _2025_GRUPO_JAHE_BACKEND.Controllers
             }
         }
 
+        [HttpPut]
+        public async Task<ActionResult<object>> Put(TipoDeHabitacionModificarDTO tipoDeHabitacionModificarDTO)
+        {
+            try
+            {
+                var resultado = await this._tarifasServicio.ActualizarTipoDeHabitacion(tipoDeHabitacionModificarDTO);
+
+                return Ok(resultado);
+            }
+            catch (Exception ex)
+            {
+                return NotFound(ex.Message);
+            }
+        }
+
 
 
     }
