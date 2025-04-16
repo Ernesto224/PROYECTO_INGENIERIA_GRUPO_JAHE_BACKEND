@@ -33,6 +33,8 @@ builder.Services.AddScoped<IFacilidadRepositorio, FacilidadRepositorio>();
 builder.Services.AddScoped<IFacilidadServicio, FacilidadServicio>();
 builder.Services.AddScoped<ITarifasRepositorio, TarifasRepositorio>();
 builder.Services.AddScoped<ITarifasServicio, TarifasServicio>();
+builder.Services.AddScoped<IEstadoHabitacionRepositorio, EstadoHabitacionRepositorio>();
+builder.Services.AddScoped<IEstadoHabitacionServicio, EstadoHabitacionServicio>();
 
 builder.Services.AddScoped<IPublicidadRepositorio, PublicidadRepositorio>();
 builder.Services.AddScoped<IPublicidadServicio, PublicidadServicio>();

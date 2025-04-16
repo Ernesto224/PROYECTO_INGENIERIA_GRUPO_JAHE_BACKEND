@@ -10,6 +10,9 @@ namespace Aplicacion.Interfaces
     public interface ITarifasServicio
     {
         public Task<IEnumerable<TipoDeHabitacionDTO>> verTarifas();
+
+        public Task<object> ActualizarTipoDeHabitacion(TipoDeHabitacionModificarDTO tipoDeHabitacionModificarDTO);
+
     }
 
 }
