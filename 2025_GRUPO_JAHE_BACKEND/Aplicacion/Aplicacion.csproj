@@ -7,7 +7,7 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <Folder Include="Agregados\" />
+    <Folder Include="Constantes\" />
   </ItemGroup>
 
   <ItemGroup>
