@@ -43,7 +43,7 @@ namespace Infraestructura.Repositorios
                     return new
                     {
                         Exitoso = false,
-                        Mensaje = $"La habitación se encuentra en el estado {estadoActual}. No puedes cambiarla."
+                        Mensaje = $"La habitación se encuentra en estado {estadoActual}."
                     };
                 }
 
