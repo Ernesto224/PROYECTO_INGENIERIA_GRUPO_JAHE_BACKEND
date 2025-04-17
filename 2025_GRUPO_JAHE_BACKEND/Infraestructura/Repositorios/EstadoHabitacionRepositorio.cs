@@ -43,7 +43,7 @@ namespace Infraestructura.Repositorios
                     return new
                     {
                         Exitoso = false,
-                        Mensaje = $"La habitación se encuentra en el estado '{estadoActual}'. No puedes cambiarla a '{nuevoEstadoUpper}'."
+                        Mensaje = $"La habitación se encuentra en el estado {estadoActual}. No puedes cambiarla."
                     };
                 }
 
@@ -53,8 +53,7 @@ namespace Infraestructura.Repositorios
                 return new
                 {
                     Exitoso = true,
-                    Mensaje = "Estado actualizado correctamente.",
-                    Habitacion = habitacion
+                    Mensaje = "Estado actualizado correctamente."
                 };
             }
             catch (Exception ex)
