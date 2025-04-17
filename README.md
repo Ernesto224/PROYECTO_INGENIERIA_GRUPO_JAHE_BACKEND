@@ -1,4 +1,4 @@
-# 2025_GRUPO_JAHE_BACKEND API (.NET 8)
+# PROYECTO_INGENIERIA_GRUPO_JAHE_BACKEND API (.NET 8)
 
 ## 🧾 Descripción
 Esta es la solución backend del sistema para el Hotel. Expone una API RESTful desarrollada con .NET 8, siguiendo los principios SOLID y arquitectura DDD, que sirve tanto al cliente como al administrador del hotel.
