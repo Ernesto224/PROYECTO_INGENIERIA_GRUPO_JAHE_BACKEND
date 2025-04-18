@@ -10,5 +10,6 @@ namespace Dominio.Interfaces
     public interface IFacilidadRepositorio
     {
         public Task<IEnumerable<Facilidad>> VerInstalacionesYAtractivos();
+        public Task<object> ModificarInfromacionDeInstalacionYAtractivo(Facilidad facilidad);
     }
 }

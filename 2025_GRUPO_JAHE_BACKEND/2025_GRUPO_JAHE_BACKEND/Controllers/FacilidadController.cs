@@ -36,17 +36,19 @@ namespace _2025_GRUPO_JAHE_BACKEND.Controllers
             }
         }
 
-        // GET api/<FacilidadController>/5
-        [HttpGet("{id}")]
-        public string Get(int id)
-        {
-            return "value";
-        }
-
         // PUT api/<FacilidadController>/5
-        [HttpPut("{id}")]
-        public void Put(int id, [FromBody] string value)
+        [HttpPut]
+        public async Task<ActionResult<Object>> Put(FacilidadModificarDTO facilidadModificarDTO)
         {
+            try 
+            { 
+                var resultado = await this._facilidadServicio.ModificarInfromacionDeInstalacionYAtractivo(facilidadModificarDTO);
+                return Ok(resultado);
+            } 
+            catch (Exception ex)
+            {
+                return NotFound(ex.Message);
+            }
         }
     }
 }
