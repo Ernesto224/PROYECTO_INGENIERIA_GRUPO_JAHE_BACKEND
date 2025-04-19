@@ -38,7 +38,7 @@ namespace Aplicacion.Servicios
                     IdTipoDeHabitacion = oferta.IdTipoDeHabitacion,
                     Nombre = oferta.TipoDeHabitacion.Nombre,
                     Descripcion = oferta.TipoDeHabitacion.Descripcion,
-                    TarifaDiaria = oferta.TipoDeHabitacion.TarifaDiaria,
+                    TarifaDiaria = (decimal)oferta.TipoDeHabitacion.TarifaDiaria,
                     Imagen = new ImagenDTO
                     {
                         IdImagen = oferta.TipoDeHabitacion.Imagen.IdImagen,
