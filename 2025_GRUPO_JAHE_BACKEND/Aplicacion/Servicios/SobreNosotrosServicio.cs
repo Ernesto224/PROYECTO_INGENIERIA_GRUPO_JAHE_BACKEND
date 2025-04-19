@@ -19,6 +19,27 @@ namespace Aplicacion.Servicios
             _sobreNosotrosRepositorio = sobreNosotrosRepositorio;
         }
 
+        public async Task<SobreNosotrosDTO> CambiarImagenGaleriaSobreNosotros(SobreNosotrosDTO sobreNosotrosDTO)
+        {
+            var sobreNosotroActualizado = await _sobreNosotrosRepositorio.CambiarImagenGaleriaSobreNosotros(new SobreNosotros
+            {
+                ImagenesSobreNosotros = sobreNosotrosDTO.Imagenes.Select(imagen => new Imagen_SobreNosotros
+                {
+                    IdImagen = imagen.IdImagen,
+                }).ToList()
+            });
+            return new SobreNosotrosDTO
+            {
+                Descripcion = sobreNosotroActualizado.Descripcion,
+                Imagenes = sobreNosotroActualizado.ImagenesSobreNosotros.Where(imagen => !imagen.Imagen.Eliminado)
+                .Select(img=> new ImagenDTO
+                {
+                    IdImagen = img.Imagen.IdImagen,
+                    Url = img.Imagen.Url
+                }).ToList()
+            };
+        }
+
         public async Task<SobreNosotrosDTO> CambiarTextoSobreNosotros(SobreNosotrosDTO sobreNosotrosDTO)
         {
             var sobreNosotrosActualizado = await _sobreNosotrosRepositorio.CambiarTextoSobreNosotros(new SobreNosotros {

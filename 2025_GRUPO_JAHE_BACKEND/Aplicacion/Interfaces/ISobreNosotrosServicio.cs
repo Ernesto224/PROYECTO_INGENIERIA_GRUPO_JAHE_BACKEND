@@ -12,5 +12,6 @@ namespace Aplicacion.Interfaces
     {
         public Task<SobreNosotrosDTO> VerDatosSobreNosotros();
         public Task<SobreNosotrosDTO> CambiarTextoSobreNosotros(SobreNosotrosDTO sobreNosotrosDTO);
+        public Task<SobreNosotrosDTO> CambiarImagenGaleriaSobreNosotros(SobreNosotrosDTO sobreNosotrosDTO);
     }
 }

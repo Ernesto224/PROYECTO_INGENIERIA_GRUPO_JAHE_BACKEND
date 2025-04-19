@@ -20,6 +20,38 @@ namespace Infraestructura.Repositorios
             _contexto = contexto;
         }
 
+        public async Task<SobreNosotros> CambiarImagenGaleriaSobreNosotros(SobreNosotros sobreNosotros)
+        {
+            try
+            {
+                var resultado = await _contexto.SobreNosotros.Include(img => img.ImagenesSobreNosotros).ThenInclude(imagen => imagen.Imagen).FirstOrDefaultAsync();
+                if (resultado != null)
+                {
+                    foreach (var imagen in resultado.ImagenesSobreNosotros)
+                    {
+                        var imagenExistente = sobreNosotros.ImagenesSobreNosotros.FirstOrDefault(i => i.IdImagen == imagen.IdImagen);
+                        if (imagenExistente != null)
+                        {
+                            imagen.Imagen.Url = imagenExistente.Imagen.Url;
+                        }
+                    }
+                    await _contexto.SaveChangesAsync();
+                    return resultado;
+                }
+                return null;
+            }
+            catch (InvalidOperationException ex)
+            {
+                Console.WriteLine($"Repository - Error de operación inválida: {ex.Message}");
+                throw new Exception("Error en la consulta a la base de datos", ex);
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"Repository - Error inesperado: {ex.Message}");
+                throw new Exception("Error al actualizar los datos de SobreNosotros", ex);
+            }
+        }
+
         public async Task<SobreNosotros> CambiarTextoSobreNosotros(SobreNosotros sobreNosotros)
         {
             try
@@ -44,7 +76,6 @@ namespace Infraestructura.Repositorios
                 throw new Exception("Error al actualizar los datos de SobreNosotros", ex);
             }
         }
-
         public async Task<SobreNosotros> VerDatosSobreNosotros()
         {
             try
