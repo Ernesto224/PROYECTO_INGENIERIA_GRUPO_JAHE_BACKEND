@@ -29,7 +29,7 @@ namespace Infraestructura.Repositorios
         {
             try
             {
-                var TipoDeHabitaciones = await this._contexto.tipoDeHabitacion
+                var TipoDeHabitaciones = await this._contexto.TipoDeHabitaciones
                     .Include(th => th.Imagen) // Incluye los datos de la imagen
                     .ToListAsync();
 
@@ -52,7 +52,7 @@ namespace Infraestructura.Repositorios
             try
             {
                 // Buscar la habitación que se desea actualizar
-                var tipoDeHabitacion = await this._contexto.tipoDeHabitacion
+                var tipoDeHabitacion = await this._contexto.TipoDeHabitaciones
                     .Include(th => th.Imagen)  // Incluir la entidad Imagen asociada
                     .FirstOrDefaultAsync(th => th.IdTipoDeHabitacion == tipoDeHabiatcionActualizado.IdTipoDeHabitacion);
 
