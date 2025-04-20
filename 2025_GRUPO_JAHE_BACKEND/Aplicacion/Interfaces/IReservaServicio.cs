@@ -10,7 +10,7 @@ namespace Aplicacion.Interfaces
 {
     public interface IReservaServicio
     {
-        public Task<bool> RealizarReserva(List<ReservaDTO> reservaDTO, ClienteDTO clienteDTO);
+        public Task<List<string>> RealizarReserva(List<ReservaDTO> reservaDTO, ClienteDTO clienteDTO);
 
         public Task<HabitacionDTO> VerHabitacionDisponible(ReservaDTO reservaDTO);
 
