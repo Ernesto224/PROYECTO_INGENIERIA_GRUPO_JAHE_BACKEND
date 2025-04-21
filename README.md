@@ -1,61 +1,20 @@
-# PROYECTO_INGENIERIA_GRUPO_JAHE_FRONTEND
-# Sistema de Reservación de Hoteles
+# PROYECTO_INGENIERIA_GRUPO_JAHE_BACKEND API (.NET 8)
 
-## Descripción
-Este es un sistema de reservación de hoteles que permite a los usuarios buscar, reservar y administrar sus estadías en hoteles registrados. El sistema está dividido en dos repositorios independientes:
+## 🧾 Descripción
+Esta es la solución backend del sistema para el Hotel. Expone una API RESTful desarrollada con .NET 8, siguiendo los principios SOLID y arquitectura DDD, que sirve tanto al cliente como al administrador del hotel.
 
-- **Frontend:** Desarrollado en [Tecnología utilizada, por ejemplo, Angular o React], proporcionando una interfaz intuitiva para los usuarios.
-- **Backend:** Construido en [Tecnología utilizada, por ejemplo, Node.js con Express o Spring Boot], encargado de la lógica del negocio y la gestión de datos.
-
-El proyecto también se relaciona con un **drive** que almacena archivos relevantes, como documentación, diseños de bases de datos y otros recursos.
-
-## Tecnologías Utilizadas
-
-### Frontend
-- [Framework o librería utilizada]
-- Tailwind CSS / Bootstrap
-- Consumo de API REST
-- Manejo de estado con [Redux, Context API, etc.]
-
-### Backend
-- [Lenguaje y framework utilizado]
-- Base de datos: [MySQL, PostgreSQL, MongoDB, etc.]
-- Autenticación con JWT / OAuth
-- Arquitectura basada en microservicios / MVC
-
-## Instalación y Configuración
-### Clonar los repositorios
-```bash
-# Clonar el frontend
-git clone https://github.com/Ernesto224/PROYECTO_INGENIERIA_GRUPO_JAHE_FRONTEND.git
-
-# Clonar el backend
-git clone https://github.com/Ernesto224/PROYECTO_INGENIERIA_GRUPO_JAHE_BACKEND.git
-```
-
-## Estructura del Proyecto
-Este proyecto sigue la arquitectura Domain-Driven Design (DDD) con principios SOLID, dividiendo la aplicación en capas bien definidas:
-
-- API (Capa de presentación)
-- Aplicación (Capa de aplicación)
-- Dominio (Capa de dominio)
-- Infraestructura (Capa de infraestructura)
-
-A continuación, se explica la función de cada capa y cómo se maneja una consulta de datos (Read) en esta arquitectura.
+## 🏗️ Arquitectura
+Se implementa la arquitectura **Domain-Driven Design (DDD) con principios SOLID**, estructurada en capas:
 ```
 /
 ├── API                            # Capa de presentación (Web API)
 │   ├── Controllers                # Controladores que manejan las solicitudes HTTP
-│   ├── Properties                 # Configuraciones del proyecto
 │   ├── appsettings.json           # Archivo de configuración (conexión a BD, logs, etc.)
 │   ├── Program.cs                 # Punto de entrada del backend
 │
 ├── Aplicacion                     # Capa de aplicación (casos de uso y lógica de aplicación)
-│   ├── Agregados                  # Agregados DDD que encapsulan entidades relacionadas
-│   ├── Comandos                   # Operaciones que modifican el estado de la aplicación
-│   ├── Consultas                  # Operaciones de solo lectura sobre los datos
-│   ├── DTOs                       # Objetos de transferencia de datos (Data Transfer Objects)
-│   ├── Handlers                   # Manejadores de comandos y consultas (CQRS)
+│   ├── Constantes                  # Mensajes de validación, nombres de claims
+│   ├── DTOs                        # Objetos de transferencia de datos (Data Transfer Objects)
 │   ├── Interfaces                  # Interfaces de servicios de aplicación
 │   ├── Servicios                   # Implementaciones de servicios de aplicación
 │
@@ -73,3 +32,43 @@ A continuación, se explica la función de cada capa y cómo se maneja una consu
 │   ├── ServiciosExternos           # Integraciones con APIs y servicios externos
 ```
 
+## 🚀 Tecnologías y Herramientas
+- .NET 8
+- C#
+- Entity Framework Core
+- SQL Server
+- LINQ
+- Cloudinary (para almacenamiento de imágenes)
+
+## 📦 Paquetes NuGet utilizados
+- `CloudinaryDotNet`
+- `Microsoft.EntityFrameworkCore`
+- `Microsoft.EntityFrameworkCore.SqlServer`
+- `Swashbuckle.AspNetCore` (si se usa Swagger)
+
+## ⚙️ Configuración
+1. Configurar la cadena de conexión en `appsettings.json`.
+
+## ▶️ Ejecución
+```
+cd 2025_GRUPO_JAHE_BACKEND/API dotnet run
+```
+
+## 📁 Estructura del Repositorio
+```
+/
+├── 2025_GRUPO_JAHE_BACKEND/
+├── SQL/              # Scripts de creación de base de datos
+├── .gitignore
+└── README.md
+```
+
+## 📎 Enlaces Relacionados
+- Repositorio Cliente Angular - PROYECTO_INGENIERIA_GRUPO_JAHE_FRONTEND
+```
+https://github.com/Ernesto224/PROYECTO_INGENIERIA_GRUPO_JAHE_FRONTEND.git
+```
+- Repositorio Administrador Angular - PROYECTO_INGENIERIA_GRUPO_JAHE_FRONTEND_ADMIN
+```
+https://github.com/Ernesto224/PROYECTO_INGENIERIA_GRUPO_JAHE_FRONTEND_ADMIN.git
+```
