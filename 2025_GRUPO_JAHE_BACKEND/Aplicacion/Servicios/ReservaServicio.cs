@@ -26,7 +26,7 @@ namespace Aplicacion.Servicios
             this._transaction = transaction;
         }
 
-        public async Task<bool> RealizarReserva(List<ReservaDTO> reservasDTO, ClienteDTO clienteDTO)
+        public async Task<List<string>> RealizarReserva(List<ReservaDTO> reservasDTO, ClienteDTO clienteDTO)
         {
             try
             {
@@ -61,10 +61,12 @@ namespace Aplicacion.Servicios
                 if (transaccion == null)
                 {
                     await this._transaction.RollbackAsync();
-                    return false;
+                    return null;
                 }
 
                 // insertar las reservas
+                List<string> idsReservas = new List<string>();
+
                 foreach (ReservaDTO reservaDTO in reservasDTO)
                 {
                     var habitacion = await this._repositorio.VerHabitacion(reservaDTO.IdHabitacion);
@@ -72,7 +74,7 @@ namespace Aplicacion.Servicios
                     if (!await this._repositorio.CambiarEstadoHabitacion(habitacion.IdHabitacion, EstadoDeHabitacion.RESERVADA.ToString()))
                     {
                         await this._transaction.RollbackAsync();
-                        return false;
+                        return null;
                     }
 
                     var reserva = new Reserva
@@ -86,20 +88,19 @@ namespace Aplicacion.Servicios
                         Transaccion = transaccion
                     };
 
-                    if (!await this._repositorio.RealizarReserva(reserva))
-                    {
-                        await this._transaction.RollbackAsync();
-                        return false;
-                    }
+                    string idReserva = await this._repositorio.RealizarReserva(reserva);
+
+                    idsReservas.Add(idReserva);
+
                 }
 
                 await this._transaction.CommitAsync();
-                return true;
+                return idsReservas;
             }
             catch (Exception ex)
             {
                 await this._transaction.RollbackAsync();
-                return false;
+                return null;
             }
         }
 

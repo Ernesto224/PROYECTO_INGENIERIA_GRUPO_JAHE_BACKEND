@@ -9,7 +9,7 @@ namespace Dominio.Interfaces
 {
     public interface IReservaRepositorio
     {
-        public Task<bool> RealizarReserva(Reserva reserva);
+        public Task<string> RealizarReserva(Reserva reserva);
 
         public Task<Habitacion> VerHabitacion(int idHabitacion);
 

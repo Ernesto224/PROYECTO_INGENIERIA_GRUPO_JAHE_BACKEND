@@ -16,7 +16,7 @@ namespace _2025_GRUPO_JAHE_BACKEND.Controllers
         }
 
         [HttpPost]
-        public async Task<ActionResult<bool>> AgregarReserva(ReservaCompletaDTO reservaCompletaDTO)
+        public async Task<ActionResult<List<string>>> AgregarReserva(ReservaCompletaDTO reservaCompletaDTO)
         {
             if (reservaCompletaDTO.ReservasDTO == null)
             {
@@ -24,11 +24,11 @@ namespace _2025_GRUPO_JAHE_BACKEND.Controllers
             }
 
 
-            var resultado = await reservaServicio.RealizarReserva(reservaCompletaDTO.ReservasDTO, reservaCompletaDTO.ClienteDTO);
+            var idsReservas = await reservaServicio.RealizarReserva(reservaCompletaDTO.ReservasDTO, reservaCompletaDTO.ClienteDTO);
 
-            if (resultado)
+            if (idsReservas != null)
             {
-                return Ok(resultado);
+                return Ok(idsReservas);
             }
             else
             {

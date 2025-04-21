@@ -21,12 +21,14 @@ namespace Infraestructura.Repositorios
             this._contexto = contexto;
         }
 
-        public async Task<bool> RealizarReserva(Reserva reserva)
+        public async Task<string> RealizarReserva(Reserva reserva)
         {
             var resultado = await _contexto.Reservas.AddAsync(reserva);
             await _contexto.SaveChangesAsync();
 
-            return resultado.Entity != null;
+            string idReserva = resultado.Entity.IdReserva.ToString();
+
+            return idReserva;
         }
 
         public async Task<Habitacion> VerHabitacionDisponible(int idTipoHabitacion, DateTime fechaLlegada, DateTime fechaSalida)
