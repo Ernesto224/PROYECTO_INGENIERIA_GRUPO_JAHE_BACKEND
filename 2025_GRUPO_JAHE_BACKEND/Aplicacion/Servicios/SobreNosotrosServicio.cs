@@ -18,6 +18,48 @@ namespace Aplicacion.Servicios
         {
             _sobreNosotrosRepositorio = sobreNosotrosRepositorio;
         }
+
+        public async Task<SobreNosotrosDTO> CambiarImagenGaleriaSobreNosotros(SobreNosotrosDTO sobreNosotrosDTO)
+        {
+            var sobreNosotroActualizado = await _sobreNosotrosRepositorio.CambiarImagenGaleriaSobreNosotros(new SobreNosotros
+            {
+                ImagenesSobreNosotros = sobreNosotrosDTO.Imagenes.Select(imagen => new Imagen_SobreNosotros
+                {
+                    IdImagen = imagen.IdImagen,
+                }).ToList()
+            });
+            return new SobreNosotrosDTO
+            {
+                Descripcion = sobreNosotroActualizado.Descripcion,
+                Imagenes = sobreNosotroActualizado.ImagenesSobreNosotros.Where(imagen => !imagen.Imagen.Eliminado)
+                .Select(img=> new ImagenDTO
+                {
+                    IdImagen = img.Imagen.IdImagen,
+                    Url = img.Imagen.Url
+                }).ToList()
+            };
+        }
+
+        public async Task<SobreNosotrosDTO> CambiarTextoSobreNosotros(SobreNosotrosDTO sobreNosotrosDTO)
+        {
+            var sobreNosotrosActualizado = await _sobreNosotrosRepositorio.CambiarTextoSobreNosotros(new SobreNosotros {
+                Descripcion = sobreNosotrosDTO.Descripcion,
+            });
+
+            return new SobreNosotrosDTO
+            {
+                Descripcion = sobreNosotrosActualizado.Descripcion,
+                Imagenes = sobreNosotrosActualizado.ImagenesSobreNosotros
+                    .Where(imagen => !imagen.Imagen.Eliminado)
+                    .Select(img => new ImagenDTO
+                    {
+                        IdImagen = img.Imagen.IdImagen,
+                        Url = img.Imagen.Url
+                    }).ToList()
+
+            };
+        }
+
         public async Task<SobreNosotrosDTO> VerDatosSobreNosotros()
         {
             var sobreNosotros = await _sobreNosotrosRepositorio.VerDatosSobreNosotros();
@@ -29,11 +71,11 @@ namespace Aplicacion.Servicios
             {
                 Descripcion = sobreNosotros.Descripcion,
                 Imagenes = sobreNosotros.ImagenesSobreNosotros
-                    .Where(i => !i.Imagen.Eliminado)
-                    .Select(i => new ImagenDTO
+                    .Where(imagen => !imagen.Imagen.Eliminado)
+                    .Select(img => new ImagenDTO
                     {
-                        IdImagen = i.Imagen.IdImagen,
-                        Url = i.Imagen.Url
+                        IdImagen = img.Imagen.IdImagen,
+                        Url = img.Imagen.Url
                     }).ToList()
             };
         }

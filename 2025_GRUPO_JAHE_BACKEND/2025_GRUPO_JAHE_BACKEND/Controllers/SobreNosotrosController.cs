@@ -29,5 +29,22 @@ namespace _2025_GRUPO_JAHE_BACKEND.Controllers
                 return StatusCode(500, "Error en al base de datos");
             }
         }
+        [HttpPut]
+        public async Task<ActionResult<SobreNosotrosDTO>> CambiarTextoSobreNosotros(SobreNosotrosDTO sobreNosotrosDTO)
+        {
+            var sobreNosotrosActualizado = await _sobreNosotrosServicio.CambiarTextoSobreNosotros(sobreNosotrosDTO);
+            if (sobreNosotrosActualizado != null)
+            {
+                return Ok(sobreNosotrosActualizado);
+            }
+            return BadRequest("Hubo un error en el servicio");
+        }
+        [HttpPut("CambiarImagenes")]
+        public async Task<ActionResult<SobreNosotrosDTO>>CambiarImagenGaleriaSobreNosotros(SobreNosotrosDTO sobreNosotrosDTO)
+        {
+            var _sobreNosotrosDTO = await _sobreNosotrosServicio.CambiarImagenGaleriaSobreNosotros(sobreNosotrosDTO);
+            return _sobreNosotrosDTO != null? Ok(_sobreNosotrosDTO) : StatusCode(500, "Error al cambiar las imagenes");
+        }
+
     }
 }

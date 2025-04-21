@@ -18,6 +18,19 @@ namespace Infraestructura.Repositorios
         {
             this._contexto = contexto;
         }
+
+        public async Task<Direccion> CambiarTextoComoLlegar(Direccion direccion)
+        {
+            var direccionActualizada = await this._contexto.Direccion.FirstOrDefaultAsync();
+            if(direccionActualizada != null)
+            {
+                direccionActualizada.Descripcion = direccion.Descripcion;
+                await this._contexto.SaveChangesAsync();
+                return direccionActualizada;
+            }
+            return null;
+        }
+
         public async Task<Direccion> VerDatosDireccion()
         {
             var direccion = await this._contexto.Direccion.FirstOrDefaultAsync();

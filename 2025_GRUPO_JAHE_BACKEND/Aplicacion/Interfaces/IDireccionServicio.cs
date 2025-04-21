@@ -10,5 +10,6 @@ namespace Aplicacion.Interfaces
     public interface IDireccionServicio
     {
         public Task<DireccionDTO> VerDatosDireccion();
+        public Task<DireccionDTO> CambiarTextoComoLlegar(DireccionDTO direccion);
     }
 }

@@ -27,5 +27,15 @@ namespace _2025_GRUPO_JAHE_BACKEND.Controllers
                 return StatusCode(500, "Error en al base de datos");
             }
         }
+        [HttpPut]
+        public async Task<ActionResult<DireccionDTO>> CambiarTextoComoLlegar(DireccionDTO direccionDTO)
+        {
+            var direccionActualizada = await _direccionServicio.CambiarTextoComoLlegar(direccionDTO);
+            if (direccionActualizada != null)
+            {
+                return Ok(direccionActualizada);
+            }
+            return BadRequest("Hubo un error en el servicio");
+        }
     }
 }
