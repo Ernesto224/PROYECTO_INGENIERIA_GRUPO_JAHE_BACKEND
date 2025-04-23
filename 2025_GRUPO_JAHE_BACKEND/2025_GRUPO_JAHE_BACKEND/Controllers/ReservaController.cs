@@ -56,6 +56,27 @@ namespace _2025_GRUPO_JAHE_BACKEND.Controllers
             }
         }
 
+        [HttpGet]
+        [Route("alternativas")]
+        public async Task<ActionResult<AlternativaDeReservaDTO>> VerAlternativasDisponibles(int idTipoHabitacion, DateTime fechaLlegada, DateTime fechaSalida)
+        {
+            var resultado = await reservaServicio.VerAlternativasDisponibles(new ReservaDTO
+            {
+                IdTipoDeHabitacion = idTipoHabitacion,
+                FechaLlegada = fechaLlegada,
+                FechaSalida = fechaSalida
+            });
+
+            if (resultado != null)
+            {
+                return Ok(resultado);
+            }
+            else
+            {
+                return Ok("No hay alternativas disponibles");
+            }
+        }
+
         [HttpPut]
         public async Task<ActionResult<bool>> CambiarEstadoHabitacion(int idHabitacion, string nuevoEstado)
         {

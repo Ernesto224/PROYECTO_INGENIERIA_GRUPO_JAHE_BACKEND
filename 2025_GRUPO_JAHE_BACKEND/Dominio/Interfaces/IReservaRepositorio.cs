@@ -19,6 +19,8 @@ namespace Dominio.Interfaces
 
         public Task<Habitacion> VerHabitacionDisponible(int idTipoHabitacion, DateTime fechaLlegada, DateTime fechaSalida);
 
+        public Task<IEnumerable<(TipoDeHabitacion tipo, DateTime inicio, DateTime fin)>> VerAlternativasDisponibles(int idTipoHabitacion, DateTime fechaLlegada, DateTime fechaSalida);
+
         public Task<List<TipoDeHabitacion>> VerTiposDeHabitacion();
 
         public Task<Cliente> VerCliente(string email);

@@ -130,5 +130,81 @@ namespace Infraestructura.Repositorios
 
             return ofertasAplicables;
         }
+
+        public async Task<IEnumerable<(TipoDeHabitacion tipo, DateTime inicio, DateTime fin)>> VerAlternativasDisponibles(int idTipoHabitacion, DateTime fechaLlegada, DateTime fechaSalida)
+        {
+            try
+            {
+                int cantidadDeDias = (fechaSalida.Date - fechaLlegada.Date).Days;
+
+                var resultTemp = await _contexto.Habitaciones
+                    .Include(h => h.TipoDeHabitacion)
+                    .Where(h => h.IdTipoDeHabitacion != idTipoHabitacion &&
+                                h.Estado != EstadoDeHabitacion.NO_DISP.ToString() &&
+                                h.Estado != EstadoDeHabitacion.OCUPADA.ToString())
+                    .Where(h => !_contexto.Reservas.Any(r =>
+                        r.IdHabitacion == h.IdHabitacion &&
+                        r.Activo &&
+                        r.Estado != EstadoDeReserva.CANCELADA.ToString() &&
+                        r.FechaLlegada < fechaSalida &&
+                        r.FechaSalida > fechaLlegada))
+                    .Take(3)
+                    .Select(h => new {
+                        Tipo = h.TipoDeHabitacion,
+                        Inicio = fechaLlegada,
+                        Fin = fechaSalida
+                    })
+                    .ToListAsync();
+
+                var alternativasPorTipo = resultTemp
+                    .Select(x => (x.Tipo, x.Inicio, x.Fin))
+                    .ToList();
+
+                var hoy = DateTime.Today;
+                var fechaMaxima = hoy.AddMonths(2);
+
+                var habitacionesMismoTipo = await _contexto.Habitaciones
+                    .Include(h => h.TipoDeHabitacion)
+                    .Where(h => h.IdTipoDeHabitacion == idTipoHabitacion &&
+                                h.Estado != EstadoDeHabitacion.NO_DISP.ToString() &&
+                                h.Estado != EstadoDeHabitacion.OCUPADA.ToString())
+                    .ToListAsync();
+
+                var alternativasPorFecha = new List<(TipoDeHabitacion tipo, DateTime inicio, DateTime fin)>();
+
+                foreach (var h in habitacionesMismoTipo)
+                {
+                    for (int offset = 0; offset <= (fechaMaxima - hoy).Days - cantidadDeDias; offset++)
+                    {
+                        var inicio = hoy.AddDays(offset);
+                        var fin = inicio.AddDays(cantidadDeDias);
+
+                        bool estaDisponible = !_contexto.Reservas.Any(r =>
+                            r.IdHabitacion == h.IdHabitacion &&
+                            r.Activo &&
+                            r.Estado != EstadoDeReserva.CANCELADA.ToString() &&
+                            r.FechaLlegada < fin &&
+                            r.FechaSalida > inicio);
+
+                        if (estaDisponible)
+                        {
+                            alternativasPorFecha.Add((h.TipoDeHabitacion, inicio, fin));
+                            break; // Solo una sugerencia por habitación
+                        }
+
+                        if (alternativasPorFecha.Count >= 3) break;
+                    }
+
+                    if (alternativasPorFecha.Count >= 3) break;
+                }
+
+                return alternativasPorTipo.Concat(alternativasPorFecha).ToList();
+            }
+            catch (Exception ex)
+            {
+                throw new Exception(ex.Message);
+            }
+        }
+
     }
 }

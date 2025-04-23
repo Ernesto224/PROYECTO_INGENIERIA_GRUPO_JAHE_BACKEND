@@ -146,5 +146,29 @@ namespace Aplicacion.Servicios
 
             return tiposDeHabitacionDTO;
         }
+
+        public async Task<IEnumerable<AlternativaDeReservaDTO>> VerAlternativasDisponibles(ReservaDTO reservaDTO)
+        {
+            var alternativasDisponibles = await this._repositorio.VerAlternativasDisponibles(
+                reservaDTO.IdTipoDeHabitacion,
+                reservaDTO.FechaLlegada,
+                reservaDTO.FechaSalida
+            );
+
+            var alternativasDisponiblesDTO = alternativasDisponibles.Select(al => new AlternativaDeReservaDTO
+            {
+                TipoDeHabitacionDTO = new TipoDeHabitacionDTO
+                {
+                    IdTipoDeHabitacion = al.tipo.IdTipoDeHabitacion,
+                    Nombre = al.tipo.Nombre,
+                    TarifaDiaria = al.tipo.TarifaDiaria,
+                },
+                Inicio = al.inicio,
+                Fin = al.fin
+            }).ToList();
+
+            return alternativasDisponiblesDTO;
+
+        }
     }
 }
