@@ -49,7 +49,12 @@ var cloudinaryUrl = builder.Configuration.GetSection("Cloudinary").GetSection("U
 // Se agrega el servicio de almacenamiento de imagenes a la inyección de dependencias
 builder.Services.AddScoped<IServicioAlmacenamientoImagenes>(servicioImagenes => new CloudinaryAlmacenamientoImagen(cloudinaryUrl!));
 
+var servicioEmailUrl = builder.Configuration.GetSection("EmailServiceApp").GetSection("Url").Value;
+builder.Services.AddScoped<IServicioEmail>(servicioEmail => new ServicioEmail(servicioEmailUrl!, new HttpClient()));
+
+
 builder.Services.AddControllers();
+builder.Services.AddHttpClient();
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
