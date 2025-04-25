@@ -106,8 +106,8 @@ namespace Aplicacion.Servicios
 
                 await this._transaction.CommitAsync();
 
-                //Si todo sale bien se le envia el correo al cliente
-                //Usando el SG
+                // Si todo sale bien se le envia el correo al cliente
+                // Usando el SG
 
                 this.EnviarCorreo(reservasRealizadas, clienteDTO, idsReservas, montoTotal);
 
@@ -185,8 +185,8 @@ namespace Aplicacion.Servicios
 
                 mensajeEmail.AppendLine($"<tr>");
                 mensajeEmail.AppendLine($"<td>{idsReservas[reservas.IndexOf(reservaDTO)]}</td>");
-                mensajeEmail.AppendLine($"<td>{habitacion.Numero}</td>");
-                mensajeEmail.AppendLine($"<td>{habitacion.TipoDeHabitacion.Nombre}</td>");
+                mensajeEmail.AppendLine($"<td>{habitacion?.Numero}</td>");
+                mensajeEmail.AppendLine($"<td>{habitacion?.TipoDeHabitacion.Nombre}</td>");
                 mensajeEmail.AppendLine($"<td>{reservaDTO.FechaLlegada.ToString("dd/MM/yyyy")}</td>");
                 mensajeEmail.AppendLine($"<td>{reservaDTO.FechaSalida.ToString("dd/MM/yyyy")}</td>");
                 mensajeEmail.AppendLine($"<td>{cantidadDias}</td>");
@@ -201,7 +201,7 @@ namespace Aplicacion.Servicios
 
             mensajeEmail.AppendLine("<h3 style='color: #2a5caa;'>Información Adicional</h3>");
             mensajeEmail.AppendLine("<ul>");
-            mensajeEmail.AppendLine("<li>Check-in: A partir de las 15:00 hrs</li>");
+            mensajeEmail.AppendLine("<li>Check-in: A partir de las 14:00 hrs</li>");
             mensajeEmail.AppendLine("<li>Check-out: Antes de las 12:00 hrs</li>");
             mensajeEmail.AppendLine("<li>Presentar este comprobante y documento de identidad al llegar</li>");
             mensajeEmail.AppendLine("</ul>");
@@ -213,7 +213,6 @@ namespace Aplicacion.Servicios
             mensajeEmail.AppendLine("<p>¡Esperamos brindarle una excelente estadía!</p>");
             mensajeEmail.AppendLine("<p>Atentamente,</p>");
             mensajeEmail.AppendLine("<p><strong>Equipo de Reservas<br/>Hotel Jade</strong></p>");
-            mensajeEmail.AppendLine("<p><img src='https://www.hoteljade.com/logo.png' alt='Hotel Jade Logo' width='150'/></p>");
 
             await this._servicioEmail.enviarEmail(clienteDTO.Email, asuntoEmail, mensajeEmail.ToString());
         }
