@@ -15,15 +15,19 @@ namespace Aplicacion.Servicios
     {
         private readonly IReservaRepositorio _repositorio;
 
+        private readonly IServicioEmail _servicioEmail;
+
         private readonly ITransactionMethods _transaction;
 
 
 
         public ReservaServicio(IReservaRepositorio reservaRepositorio,
-                                ITransactionMethods transaction)
+                                ITransactionMethods transaction,
+                                IServicioEmail servicioEmail)
         {
             this._repositorio = reservaRepositorio;
             this._transaction = transaction;
+            this._servicioEmail = servicioEmail;
         }
 
         public async Task<List<string>> RealizarReserva(List<ReservaDTO> reservasDTO, ClienteDTO clienteDTO)
@@ -45,7 +49,7 @@ namespace Aplicacion.Servicios
                     };
                 }
 
-                decimal montoTotal = 0; 
+                decimal montoTotal = 0;
 
                 // calcular el monto total
                 foreach (ReservaDTO reservaDTO in reservasDTO)
@@ -66,6 +70,8 @@ namespace Aplicacion.Servicios
 
                 // insertar las reservas
                 List<string> idsReservas = new List<string>();
+
+                List<Reserva> reservasRealizadas = new List<Reserva>();
 
                 foreach (ReservaDTO reservaDTO in reservasDTO)
                 {
@@ -90,11 +96,22 @@ namespace Aplicacion.Servicios
 
                     string idReserva = await this._repositorio.RealizarReserva(reserva);
 
+                    reservasRealizadas.Add(reserva);
+
                     idsReservas.Add(idReserva);
 
                 }
 
+                
+
                 await this._transaction.CommitAsync();
+
+                // Si todo sale bien se le envia el correo al cliente
+                // Usando el SG
+
+                this.EnviarCorreo(reservasRealizadas, clienteDTO, idsReservas, montoTotal);
+
+
                 return idsReservas;
             }
             catch (Exception ex)
@@ -168,7 +185,59 @@ namespace Aplicacion.Servicios
             }).ToList();
 
             return alternativasDisponiblesDTO;
+        }
 
+        private async void EnviarCorreo(List<Reserva> reservas, ClienteDTO clienteDTO, List<string>idsReservas, decimal montoTotal)
+        {
+            string asuntoEmail = $"Confirmación de Reserva - Hotel Jade";
+
+            StringBuilder mensajeEmail = new StringBuilder();
+            mensajeEmail.AppendLine($"<h2 style='color: #2a5caa;'>¡Gracias por su reserva, {clienteDTO.Nombre} {clienteDTO.Apellidos}!</h2>");
+            mensajeEmail.AppendLine("<p>Su reserva en el Hotel Jade ha sido confirmada. A continuación encontrará los detalles:</p>");
+            mensajeEmail.AppendLine("<br/>");
+
+            mensajeEmail.AppendLine("<h3 style='color: #2a5caa;'>Detalles de la Reserva</h3>");
+            mensajeEmail.AppendLine("<table border='1' cellpadding='5' cellspacing='0' style='border-collapse: collapse; width: 100%;'>");
+            mensajeEmail.AppendLine("<tr style='background-color: #f2f2f2;'><th>N° Reserva</th><th>Habitación</th><th>Tipo</th><th>Check-in</th><th>Check-out</th><th>Noches</th></tr>");
+
+            foreach (Reserva reservaDTO in reservas)
+            {
+                var habitacion = reservaDTO.Habitacion;
+                TimeSpan diferencia = reservaDTO.FechaSalida - reservaDTO.FechaLlegada;
+                int cantidadDias = (int)diferencia.TotalDays;
+
+                mensajeEmail.AppendLine($"<tr>");
+                mensajeEmail.AppendLine($"<td>{idsReservas[reservas.IndexOf(reservaDTO)]}</td>");
+                mensajeEmail.AppendLine($"<td>{habitacion?.Numero}</td>");
+                mensajeEmail.AppendLine($"<td>{habitacion?.TipoDeHabitacion.Nombre}</td>");
+                mensajeEmail.AppendLine($"<td>{reservaDTO.FechaLlegada.ToString("dd/MM/yyyy")}</td>");
+                mensajeEmail.AppendLine($"<td>{reservaDTO.FechaSalida.ToString("dd/MM/yyyy")}</td>");
+                mensajeEmail.AppendLine($"<td>{cantidadDias}</td>");
+                mensajeEmail.AppendLine($"</tr>");
+            }
+
+            mensajeEmail.AppendLine("</table>");
+            mensajeEmail.AppendLine("<br/>");
+
+            mensajeEmail.AppendLine($"<h3 style='color: #2a5caa;'>Total Pagado: {montoTotal.ToString("C")}</h3>");
+            mensajeEmail.AppendLine("<br/>");
+
+            mensajeEmail.AppendLine("<h3 style='color: #2a5caa;'>Información Adicional</h3>");
+            mensajeEmail.AppendLine("<ul>");
+            mensajeEmail.AppendLine("<li>Check-in: A partir de las 14:00 hrs</li>");
+            mensajeEmail.AppendLine("<li>Check-out: Antes de las 12:00 hrs</li>");
+            mensajeEmail.AppendLine("<li>Presentar este comprobante y documento de identidad al llegar</li>");
+            mensajeEmail.AppendLine("</ul>");
+            mensajeEmail.AppendLine("<br/>");
+
+            mensajeEmail.AppendLine("<p>Si necesita hacer algún cambio en su reserva, por favor contáctenos a <a href='mailto:reservas@hoteljade.com'>reservas@hoteljade.com</a> o al teléfono +123 456 7890.</p>");
+            mensajeEmail.AppendLine("<br/>");
+
+            mensajeEmail.AppendLine("<p>¡Esperamos brindarle una excelente estadía!</p>");
+            mensajeEmail.AppendLine("<p>Atentamente,</p>");
+            mensajeEmail.AppendLine("<p><strong>Equipo de Reservas<br/>Hotel Jade</strong></p>");
+
+            await this._servicioEmail.enviarEmail(clienteDTO.Email, asuntoEmail, mensajeEmail.ToString());
         }
     }
 }

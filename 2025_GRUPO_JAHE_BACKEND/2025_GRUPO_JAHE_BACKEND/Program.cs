@@ -83,8 +83,12 @@ builder.Services.AddAuthentication(config => {
         (Encoding.UTF8.GetBytes(builder.Configuration["JwtSecretKey:key"]!))
     };
 });
+var servicioEmailUrl = builder.Configuration.GetSection("EmailServiceApp").GetSection("Url").Value;
+builder.Services.AddScoped<IServicioEmail>(servicioEmail => new ServicioEmail(servicioEmailUrl!, new HttpClient()));
+
 
 builder.Services.AddControllers();
+builder.Services.AddHttpClient();
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
