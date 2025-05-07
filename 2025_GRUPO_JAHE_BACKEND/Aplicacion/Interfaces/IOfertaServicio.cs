@@ -9,6 +9,10 @@ namespace Aplicacion.Interfaces
 {
     public interface IOfertaServicio
     {
-        public Task<List<OfertaDTO>> VerOfertasActivas();
+        //public Task<List<OfertaDTO>> VerOfertasActivas();
+
+        public Task<OfertaDTO> CrearOferta(OfertaDTO ofertaDTO);
+
+        public Task<List<OfertaDTO>> VerOfertas();
     }
 }
