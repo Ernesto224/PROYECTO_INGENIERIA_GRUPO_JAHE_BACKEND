@@ -8,7 +8,7 @@ using Dominio.Nucleo;
 
 namespace Dominio.Interfaces
 {
-    public interface IOfertaRepositorio : IRepository<Oferta>
+    public interface IOfertaRepositorio : IRepositorio<Oferta>
     {
         //public Task<List<Oferta>> VerOfertasActivas();
 

@@ -19,7 +19,7 @@ namespace Aplicacion.Servicios
             this._habitacionRepositorio = habitacionRepositorio;
         }
 
-        public async Task<ResultadoConsultaHabitacionDTO> ConsultarDisponibilidadDeHabitaciones(int[] idTiposHabitacion, 
+        public async Task<RespuestaConsultaTablaDTO<HabitacionConsultaDTO>> ConsultarDisponibilidadDeHabitaciones(int[] idTiposHabitacion, 
             DateTime fechaLlegada, DateTime fechaSalida, int numeroDePagina, int maximoDeDatos, bool irALaUltimaPagina)
         {
             var resultado = await this._habitacionRepositorio.ConsultarDisponibilidadDeHabitaciones(idTiposHabitacion,
@@ -28,9 +28,9 @@ namespace Aplicacion.Servicios
             if (resultado.habitaciones == null)
                 throw new Exception("No se encontraron datos.");
 
-            return new ResultadoConsultaHabitacionDTO
+            return new RespuestaConsultaTablaDTO<HabitacionConsultaDTO>
             {
-                Habitaciones = resultado.habitaciones.Select(h => new HabitacionConsultaDTO 
+                Lista = resultado.habitaciones.Select(h => new HabitacionConsultaDTO 
                     {
                         IdHabitacion = h.IdHabitacion,
                         Numero = h.Numero,

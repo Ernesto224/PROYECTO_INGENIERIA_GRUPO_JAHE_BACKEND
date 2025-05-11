@@ -9,12 +9,12 @@ using Microsoft.EntityFrameworkCore;
 
 namespace Infraestructura.Nucleo
 {
-    public class Repository<TEntity> : IRepository<TEntity> where TEntity : class
+    public class BaseRepositorio<TEntity> : IRepositorio<TEntity> where TEntity : class
     {
         private readonly DbContext _context;
         private readonly DbSet<TEntity> _dbSet;
 
-        public Repository(DbContext context)
+        public BaseRepositorio(DbContext context)
         {
             _context = context ?? throw new ArgumentNullException(nameof(context));
             _dbSet = _context.Set<TEntity>();
