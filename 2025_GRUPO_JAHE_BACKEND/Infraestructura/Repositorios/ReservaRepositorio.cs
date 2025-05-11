@@ -40,7 +40,7 @@ namespace Infraestructura.Repositorios
                             (h.Estado != EstadoDeHabitacion.NO_DISP.ToString() && h.Estado != EstadoDeHabitacion.OCUPADA.ToString()))
                 .Where(h => !_contexto.Reservas.Any(r =>
                     r.IdHabitacion == h.IdHabitacion &&
-                    r.Activo &&
+                    r.Activa &&
                     r.Estado != EstadoDeReserva.CANCELADA.ToString() &&
                     r.FechaLlegada.Date < fechaSalida.Date && 
                     r.FechaSalida.Date > fechaLlegada.Date)) 
@@ -123,7 +123,7 @@ namespace Infraestructura.Repositorios
         public async Task<List<Oferta>> VerOfertasAplicables(int idTipoDeHabitacion, DateTime fechaLlegada, DateTime fechaSalida)
         {
             var ofertasAplicables = await _contexto.Ofertas
-                .Where(o => o.Activo &&
+                .Where(o => o.Activa &&
                    o.IdTipoDeHabitacion == idTipoDeHabitacion &&
                    !(fechaSalida < o.FechaInicio || fechaLlegada > o.FechaFinal))
                 .ToListAsync();
@@ -144,7 +144,7 @@ namespace Infraestructura.Repositorios
                                 h.Estado != EstadoDeHabitacion.OCUPADA.ToString())
                     .Where(h => !_contexto.Reservas.Any(r =>
                         r.IdHabitacion == h.IdHabitacion &&
-                        r.Activo &&
+                        r.Activa &&
                         r.Estado != EstadoDeReserva.CANCELADA.ToString() &&
                         r.FechaLlegada < fechaSalida &&
                         r.FechaSalida > fechaLlegada))
@@ -181,7 +181,7 @@ namespace Infraestructura.Repositorios
 
                         bool estaDisponible = !_contexto.Reservas.Any(r =>
                             r.IdHabitacion == h.IdHabitacion &&
-                            r.Activo &&
+                            r.Activa &&
                             r.Estado != EstadoDeReserva.CANCELADA.ToString() &&
                             r.FechaLlegada < fin &&
                             r.FechaSalida > inicio);

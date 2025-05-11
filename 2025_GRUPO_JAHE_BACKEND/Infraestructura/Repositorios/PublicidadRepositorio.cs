@@ -26,7 +26,7 @@ namespace Infraestructura.Repositorios
                 var publicidades = await this._contexto.Publicidades
                     .Include(publicidades => publicidades.Imagen)
                     .Where(publicidad => publicidad.Imagen!.Eliminado == false)
-                    .Where(publicidad => publicidad.Activo == true)
+                    .Where(publicidad => publicidad.Activa == true)
                     .ToListAsync();
 
                 if (publicidades == null)

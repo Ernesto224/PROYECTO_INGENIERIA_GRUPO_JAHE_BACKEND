@@ -16,7 +16,6 @@ namespace Dominio.Entidades
         public int IdOferta { get; set; }
 
         [Required]
-        [MaxLength(int.MaxValue)]
         public string Nombre { get; set; } = string.Empty;
 
         [Required]
@@ -29,11 +28,17 @@ namespace Dominio.Entidades
         public int Porcentaje { get; set; }
 
         [Required]
-        public bool Activo { get; set; }
+        public bool Activa { get; set; } = true;
 
         // Clave foránea
         [ForeignKey("TipoDeHabitacion")]
         public int IdTipoDeHabitacion { get; set; }
         public TipoDeHabitacion? TipoDeHabitacion { get; set; }
+
+        // Clave foránea
+        [ForeignKey("Imagen")]
+        public int IdImagen { get; set; }
+
+        public Imagen? Imagen { get; set; }
     }
 }
