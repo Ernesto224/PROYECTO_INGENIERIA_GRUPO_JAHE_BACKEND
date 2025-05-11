@@ -31,7 +31,7 @@ namespace Aplicacion.Servicios
                 FechaInicio = ofertaDTO.FechaInicio,
                 FechaFinal = ofertaDTO.FechaFinal,
                 Porcentaje = ofertaDTO.Porcentaje,
-                Activo = ofertaDTO.Activo,
+                Activa = ofertaDTO.Activo,
                 IdTipoDeHabitacion = ofertaDTO.TipoDeHabitacion.IdTipoDeHabitacion
             };
 
@@ -53,7 +53,7 @@ namespace Aplicacion.Servicios
                 FechaInicio = o.FechaInicio,
                 FechaFinal = o.FechaFinal,
                 Porcentaje = o.Porcentaje,
-                Activo = o.Activo,
+                Activo = o.Activa,
                 TipoDeHabitacion = new TipoDeHabitacionDTO 
                 {
                     IdTipoDeHabitacion = o.IdTipoDeHabitacion,

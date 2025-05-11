@@ -13,10 +13,10 @@ namespace Dominio.Entidades
     {
         [ForeignKey("SobreNosotros")]
         public int IdSobreNosotros { get; set; }
-        public SobreNosotros SobreNosotros { get; set; }
+        public SobreNosotros? SobreNosotros { get; set; }
 
         [ForeignKey("Imagen")]
         public int IdImagen { get; set; }
-        public Imagen Imagen { get; set; }
+        public Imagen? Imagen { get; set; }
     }
 }

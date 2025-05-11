@@ -25,8 +25,7 @@ namespace Dominio.Entidades
         [Required]
         public string Estado { get; set; } = string.Empty;
 
-        [Required]
-        public bool Activo { get; set; } = false;
+        public bool Activa { get; set; } = true;
 
         [ForeignKey("Cliente")]
         public int IdCliente { get; set; }

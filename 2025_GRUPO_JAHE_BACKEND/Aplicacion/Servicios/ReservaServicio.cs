@@ -88,7 +88,7 @@ namespace Aplicacion.Servicios
                         FechaLlegada = reservaDTO.FechaLlegada,
                         FechaSalida = reservaDTO.FechaSalida,
                         Estado = EstadoDeReserva.CONFIRMADA.ToString(),
-                        Activo = true,
+                        Activa = true,
                         Cliente = cliente,
                         Habitacion = habitacion,
                         Transaccion = transaccion

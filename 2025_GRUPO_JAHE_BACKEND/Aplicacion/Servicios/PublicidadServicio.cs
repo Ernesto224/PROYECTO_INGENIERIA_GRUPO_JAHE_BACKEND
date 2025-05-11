@@ -29,8 +29,8 @@ namespace Aplicacion.Servicios
             return publicidades.Select(publicidad => new PublicidadDTO
             {
                 IdPublicidad = publicidad.IdPublicidad,
-                EnlacePublicidad = publicidad.EnlacePublicidad,
-                Activo = publicidad.Activo,
+                EnlacePublicidad = publicidad.Enlace,
+                Activo = publicidad.Activa,
                 Imagen = new ImagenDTO
                 {
                     IdImagen = publicidad.Imagen.IdImagen,
