@@ -8,7 +8,7 @@ using Dominio.Nucleo;
 
 namespace Dominio.Interfaces
 {
-    public interface IPublicidadRepositorio : IRepositorio<Publicidad>
+    public interface IPublicidadRepositorio : IBaseRepositorio<Publicidad>
     {
         public Task<List<Publicidad>> VerPublicidadesActivas();
     }

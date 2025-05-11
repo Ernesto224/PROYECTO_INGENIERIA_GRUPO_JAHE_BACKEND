@@ -35,7 +35,7 @@ namespace Aplicacion.Servicios
                     Descripcion = homeModificarDTO.Descripcion,
                     Imagen = new Imagen
                     {
-                        Url = urlImagen,
+                        Ruta = urlImagen,
                     }
                 };
 
@@ -61,7 +61,7 @@ namespace Aplicacion.Servicios
                 Imagen = home.Imagen == null ? null : new ImagenDTO
                 {
                     IdImagen = home.Imagen.IdImagen,
-                    Url = home.Imagen.Url,
+                    Url = home.Imagen.Ruta,
                 }
             };
         }

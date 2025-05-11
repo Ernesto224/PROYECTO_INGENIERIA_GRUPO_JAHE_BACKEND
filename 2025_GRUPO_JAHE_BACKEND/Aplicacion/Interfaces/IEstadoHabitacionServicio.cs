@@ -13,6 +13,5 @@ namespace Aplicacion.Interfaces
         public Task<IEnumerable<EstadoHabitacionDTO>> verHabitaciones();
 
         public Task<object> ActualizarEstadoDeHabitacion(ActualizarEstadoHabitacionDTO actualizarEstadoHabitacionDTO);
-
     }
 }

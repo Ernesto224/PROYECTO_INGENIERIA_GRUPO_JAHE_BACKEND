@@ -19,13 +19,13 @@ namespace Infraestructura.Repositorios
             this._contexto = contexto;
         }
 
-        public async Task<(bool loginCorrecto, Administrador administradorRecuperado)> LoginAdministrador(Administrador administrador)
+        public async Task<(bool loginCorrecto, Usuario administradorRecuperado)> LoginAdministrador(Usuario administrador)
         {
             try 
             { 
                 var administradorDb = await this._contexto.Administradores
-                    .FirstOrDefaultAsync<Administrador>(administradorDb => (
-                        administradorDb.NombreDeUsuario == administrador.NombreDeUsuario
+                    .FirstOrDefaultAsync<Usuario>(administradorDb => (
+                        administradorDb.NombreUsuario == administrador.NombreUsuario
                     ) && (
                         administradorDb.Contrasennia == administrador.Contrasennia
                     ));
@@ -43,12 +43,12 @@ namespace Infraestructura.Repositorios
             }
         }
 
-        public async Task<Administrador> ObtenerInformacionDelAdministrador(int idAdmin)
+        public async Task<Usuario> ObtenerInformacionDelAdministrador(int idAdmin)
         {
             try
             {
                 var administradorDb = await this._contexto.Administradores
-                   .FirstOrDefaultAsync<Administrador>(administradorDb => administradorDb.IdAdmin == idAdmin);
+                   .FirstOrDefaultAsync<Usuario>(administradorDb => administradorDb.IdUsuario == idAdmin);
 
                 if (administradorDb == null)
                 {

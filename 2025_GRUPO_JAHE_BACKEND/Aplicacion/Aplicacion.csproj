@@ -7,7 +7,6 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <Folder Include="Constantes\" />
     <Folder Include="Mapeadores\" />
   </ItemGroup>
 

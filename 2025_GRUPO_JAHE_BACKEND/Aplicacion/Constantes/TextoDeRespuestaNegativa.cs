@@ -6,8 +6,7 @@ using System.Threading.Tasks;
 
 namespace Dominio.Enumeraciones
 {
-    public enum TextoDeRespuestaPositiva
+    public static class TextoDeRespuestaNegativa
     {
-        
     }
 }

@@ -22,9 +22,6 @@ namespace Infraestructura.Repositorios
             this._contexto = contexto;
         }
 
-      
-
-
         public async Task<IEnumerable<TipoDeHabitacion>> verTarifas()
         {
             try
@@ -44,8 +41,6 @@ namespace Infraestructura.Repositorios
                 throw new Exception(ex.Message);
             }
         }
-
-
 
         public async Task<object> ActualizarTipoDeHabitacion(TipoDeHabitacion tipoDeHabiatcionActualizado, string? urlImagen)
         {
@@ -68,7 +63,7 @@ namespace Infraestructura.Repositorios
                 if (urlImagen != null)
                 {
                     // Actualizamos la URL de la imagen
-                    tipoDeHabitacion.Imagen.Url = urlImagen;
+                    tipoDeHabitacion.Imagen.Ruta = urlImagen;
                 }
 
                 // Guardamos los cambios en la base de datos
@@ -80,7 +75,7 @@ namespace Infraestructura.Repositorios
                     tipoDeHabitacion.Nombre,
                     tipoDeHabitacion.Descripcion,
                     tipoDeHabitacion.TarifaDiaria,
-                    ImagenUrl = tipoDeHabitacion.Imagen.Url
+                    ImagenUrl = tipoDeHabitacion.Imagen.Ruta
                 };
             }
             catch (Exception ex)

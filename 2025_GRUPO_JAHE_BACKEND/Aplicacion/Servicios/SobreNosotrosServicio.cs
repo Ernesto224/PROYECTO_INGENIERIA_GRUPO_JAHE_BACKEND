@@ -31,11 +31,11 @@ namespace Aplicacion.Servicios
             return new SobreNosotrosDTO
             {
                 Descripcion = sobreNosotroActualizado.Descripcion,
-                Imagenes = sobreNosotroActualizado.ImagenesSobreNosotros.Where(imagen => !imagen.Imagen.Eliminado)
+                Imagenes = sobreNosotroActualizado.ImagenesSobreNosotros.Where(imagen => !imagen.Imagen.Activa)
                 .Select(img=> new ImagenDTO
                 {
                     IdImagen = img.Imagen.IdImagen,
-                    Url = img.Imagen.Url
+                    Url = img.Imagen.Ruta
                 }).ToList()
             };
         }
@@ -50,11 +50,11 @@ namespace Aplicacion.Servicios
             {
                 Descripcion = sobreNosotrosActualizado.Descripcion,
                 Imagenes = sobreNosotrosActualizado.ImagenesSobreNosotros
-                    .Where(imagen => !imagen.Imagen.Eliminado)
+                    .Where(imagen => !imagen.Imagen.Activa)
                     .Select(img => new ImagenDTO
                     {
                         IdImagen = img.Imagen.IdImagen,
-                        Url = img.Imagen.Url
+                        Url = img.Imagen.Ruta
                     }).ToList()
 
             };
@@ -71,11 +71,11 @@ namespace Aplicacion.Servicios
             {
                 Descripcion = sobreNosotros.Descripcion,
                 Imagenes = sobreNosotros.ImagenesSobreNosotros
-                    .Where(imagen => !imagen.Imagen.Eliminado)
+                    .Where(imagen => !imagen.Imagen.Activa)
                     .Select(img => new ImagenDTO
                     {
                         IdImagen = img.Imagen.IdImagen,
-                        Url = img.Imagen.Url
+                        Url = img.Imagen.Ruta
                     }).ToList()
             };
         }

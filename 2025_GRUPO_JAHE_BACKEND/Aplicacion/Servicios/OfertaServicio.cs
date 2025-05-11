@@ -87,7 +87,7 @@ namespace Aplicacion.Servicios
         //            Imagen = new ImagenDTO
         //            {
         //                IdImagen = oferta.TipoDeHabitacion.Imagen.IdImagen,
-        //                Url = oferta.TipoDeHabitacion.Imagen.Url
+        //                Ruta = oferta.TipoDeHabitacion.Imagen.Ruta
         //            }
         //        }
         //    }).ToList();

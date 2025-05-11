@@ -10,7 +10,7 @@ namespace Dominio.Interfaces.Seguridad
 {
     public interface IServicioGeneracionDeTokens
     {
-        public Task<(string tokenDeAcceso, string tokenDeRefresco, DateTime fechaDeExpiracion)> GenerarTokenDeAcceso(Administrador administrador);
+        public Task<(string tokenDeAcceso, string tokenDeRefresco, DateTime fechaDeExpiracion)> GenerarTokenDeAcceso(Usuario administrador);
         public Task<string> ValidarToken(string token);
     }
 }

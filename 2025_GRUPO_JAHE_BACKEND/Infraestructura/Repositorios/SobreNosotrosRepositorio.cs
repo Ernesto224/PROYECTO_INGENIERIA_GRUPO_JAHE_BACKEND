@@ -32,7 +32,7 @@ namespace Infraestructura.Repositorios
                         var imagenExistente = sobreNosotros.ImagenesSobreNosotros.FirstOrDefault(i => i.IdImagen == imagen.IdImagen);
                         if (imagenExistente != null)
                         {
-                            imagen.Imagen.Url = imagenExistente.Imagen.Url;
+                            imagen.Imagen.Ruta = imagenExistente.Imagen.Ruta;
                         }
                     }
                     await _contexto.SaveChangesAsync();

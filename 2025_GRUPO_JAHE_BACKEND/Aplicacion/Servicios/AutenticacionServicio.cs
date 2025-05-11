@@ -25,9 +25,9 @@ namespace Aplicacion.Servicios
 
         public async Task<RespuestaAutenticacionDTO> LoginAdministrador(AdministradorLoginDTO administradorLoginDTO)
         {
-            var administrador = new Administrador 
+            var administrador = new Usuario 
             {
-                NombreDeUsuario = administradorLoginDTO.NombreDeUsuario,
+                NombreUsuario = administradorLoginDTO.NombreDeUsuario,
                 Contrasennia = administradorLoginDTO.Contrasennia,
             };
 

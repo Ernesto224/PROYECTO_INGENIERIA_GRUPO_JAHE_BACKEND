@@ -10,6 +10,6 @@ namespace Aplicacion.Interfaces
     public interface IHomeServicio
     {
         public Task<HomeDTO> VerDatosDeHome();
-        public Task<RespuestaDTO<HomeDTO>> ModificarDatosDeHome(HomeModificarDTO homeModificarDTO);
+        public Task<object> ModificarDatosDeHome(HomeModificarDTO homeModificarDTO);
     }
 }
