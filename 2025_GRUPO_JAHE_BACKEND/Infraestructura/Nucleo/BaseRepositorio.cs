@@ -9,7 +9,7 @@ using Microsoft.EntityFrameworkCore;
 
 namespace Infraestructura.Nucleo
 {
-    public class BaseRepositorio<TEntity> : IRepositorio<TEntity> where TEntity : class
+    public class BaseRepositorio<TEntity> : IBaseRepositorio<TEntity> where TEntity : class
     {
         private readonly DbContext _context;
         private readonly DbSet<TEntity> _dbSet;
