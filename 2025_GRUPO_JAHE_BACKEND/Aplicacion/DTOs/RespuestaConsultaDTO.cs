@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace Aplicacion.DTOs
 {
-    public class RespuestaConsultaTablaDTO<T>
+    public class RespuestaConsultaDTO<T>
     {
         public IEnumerable<T>? Lista { get; set; }
         public int TotalRegistros { get; set; }

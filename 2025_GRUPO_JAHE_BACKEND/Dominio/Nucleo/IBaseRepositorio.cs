@@ -13,6 +13,5 @@ namespace Dominio.Nucleo
         public Task CrearAsync<T>(T entity) where T : class;
         public Task UpdateAsync<T>(T entity) where T : class;
         public Task DeleteAsync<T>(T entity) where T : class;
-
     }
 }

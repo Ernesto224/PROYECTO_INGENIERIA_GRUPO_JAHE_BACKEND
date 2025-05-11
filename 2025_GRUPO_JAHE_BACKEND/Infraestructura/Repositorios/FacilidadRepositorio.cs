@@ -35,10 +35,10 @@ namespace Infraestructura.Repositorios
                 facilidadDb.Descripcion = facilidad.Descripcion;
 
                 // Si se ha proporcionado una nueva URL de imagen, se actualiza
-                if (facilidad.Imagen.Url != null)
+                if (facilidad.Imagen.Ruta != null)
                 {
                     // Actualizamos la URL de la imagen
-                    facilidadDb.Imagen.Url = facilidad.Imagen.Url;
+                    facilidadDb.Imagen.Ruta = facilidad.Imagen.Ruta;
                 }
 
                 // Guardamos los cambios en la base de datos
@@ -59,7 +59,7 @@ namespace Infraestructura.Repositorios
             {
                 var facilidades = await this._contexto.Facilidades
                     .Include(facilidad => facilidad.Imagen)
-                    .Where(facilidad => facilidad.Imagen!.Eliminado == false)
+                    .Where(facilidad => facilidad.Imagen!.Activa == true)
                     .ToListAsync<Facilidad>();
 
                 if (facilidades == null)

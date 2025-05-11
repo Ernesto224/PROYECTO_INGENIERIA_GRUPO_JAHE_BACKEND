@@ -28,7 +28,7 @@ namespace Infraestructura.Persistencia
         public DbSet<Transaccion> Transacciones { get; set; }
         public DbSet<TipoDeHabitacion> TipoDeHabitaciones { get; set; }
         public DbSet<Cliente> Clientes { get; set; }
-        public DbSet<Administrador> Administradores { get; set; }
+        public DbSet<Usuario> Administradores { get; set; }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {

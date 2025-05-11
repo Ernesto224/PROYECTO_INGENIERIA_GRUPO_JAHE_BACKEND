@@ -20,20 +20,14 @@ namespace Infraestructura.Repositorios
             _contexto = contexto;
         }
 
-        public new async Task CrearAsync<Publicidad>(Publicidad entity) where Publicidad : class
-        {
-            if (entity == null) throw new ArgumentNullException(nameof(entity));
-            await _contexto.Set<T>().AddAsync(entity);
-        }
-
         public async Task<List<Publicidad>> VerPublicidadesActivas()
         {
             try
             {
                 var publicidades = await this._contexto.Publicidades
                     .Include(publicidades => publicidades.Imagen)
-                    .Where(publicidad => publicidad.Imagen!.Activa == false)
-                    .Where(publicidad => publicidad.Activo == true)
+                    .Where(publicidad => publicidad.Imagen!.Activa == true)
+                    .Where(publicidad => publicidad.Activa == true)
                     .ToListAsync();
 
                 if (publicidades == null)

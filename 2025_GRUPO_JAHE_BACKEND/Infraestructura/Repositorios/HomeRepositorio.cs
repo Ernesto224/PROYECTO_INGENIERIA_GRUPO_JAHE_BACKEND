@@ -33,7 +33,7 @@ namespace Infraestructura.Repositorios
 
                 // Actualizar datos
                 homeDb.Descripcion = home.Descripcion;
-                homeDb.Imagen!.Url = home.Imagen!.Url;
+                homeDb.Imagen!.Ruta = home.Imagen!.Ruta;
 
                 // Guardar cambios
                 var resultado = await _contexto.SaveChangesAsync();
@@ -54,7 +54,7 @@ namespace Infraestructura.Repositorios
             { 
                 var home = await this._contexto.Homes
                     .Include(home => home.Imagen)
-                    .Where(home => home.Imagen!.Eliminado == false)
+                    .Where(home => home.Imagen!.Activa == true)
                     .FirstOrDefaultAsync<Home>();
 
                 if (home == null)

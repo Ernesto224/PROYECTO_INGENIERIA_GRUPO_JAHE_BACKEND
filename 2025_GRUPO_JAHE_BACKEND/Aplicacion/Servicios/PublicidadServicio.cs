@@ -34,7 +34,7 @@ namespace Aplicacion.Servicios
                 Imagen = new ImagenDTO
                 {
                     IdImagen = publicidad.Imagen.IdImagen,
-                    Url = publicidad.Imagen.Url
+                    Url = publicidad.Imagen.Ruta
                 }
             }).ToList();
         }

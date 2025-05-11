@@ -38,7 +38,6 @@ namespace Dominio.Entidades
         // Clave foránea
         [ForeignKey("Imagen")]
         public int IdImagen { get; set; }
-
         public Imagen? Imagen { get; set; }
     }
 }

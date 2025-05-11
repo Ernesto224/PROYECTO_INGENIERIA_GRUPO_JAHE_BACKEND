@@ -43,7 +43,7 @@ namespace Aplicacion.Servicios
                     Descripcion = facilidadModificarDTO.Descripcion,
                     Imagen = new Imagen
                     {
-                        Url = urlImagen
+                        Ruta = urlImagen
                     }
                 };
 
@@ -72,7 +72,7 @@ namespace Aplicacion.Servicios
                 Imagen = facilidad.Imagen == null ? null : new ImagenDTO
                 {
                     IdImagen = facilidad.Imagen.IdImagen,
-                    Url = facilidad.Imagen.Url,
+                    Url = facilidad.Imagen.Ruta,
                 }
             }
             );

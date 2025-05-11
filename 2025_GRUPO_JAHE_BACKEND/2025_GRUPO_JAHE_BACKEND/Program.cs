@@ -57,7 +57,7 @@ builder.Services.AddScoped<IAdministradorRepositorio, AdministradorRepositorio>(
 builder.Services.AddScoped<IAutenticacionServicio, AutenticacionServicio>();
 
 // Se optiene la URL de Cloudinary del archivo appsettings.json
-var cloudinaryUrl = builder.Configuration.GetSection("Cloudinary").GetSection("Url").Value;
+var cloudinaryUrl = builder.Configuration.GetSection("Cloudinary").GetSection("Ruta").Value;
 // Se agrega el servicio de almacenamiento de imagenes a la inyecci�n de dependencias
 builder.Services.AddScoped<IServicioAlmacenamientoImagenes>(servicioImagenes => new CloudinaryAlmacenamientoImagen(cloudinaryUrl!));
 
@@ -83,7 +83,7 @@ builder.Services.AddAuthentication(config => {
         (Encoding.UTF8.GetBytes(builder.Configuration["JwtSecretKey:key"]!))
     };
 });
-var servicioEmailUrl = builder.Configuration.GetSection("EmailServiceApp").GetSection("Url").Value;
+var servicioEmailUrl = builder.Configuration.GetSection("EmailServiceApp").GetSection("Ruta").Value;
 builder.Services.AddScoped<IServicioEmail>(servicioEmail => new ServicioEmail(servicioEmailUrl!, new HttpClient()));
 
 

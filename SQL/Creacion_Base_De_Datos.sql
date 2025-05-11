@@ -151,3 +151,6 @@ CREATE TABLE Temporada (
     FechaFinal DATE,
     Porcentaje INT
 );
+
+
+select * from Habitacion

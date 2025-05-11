@@ -21,7 +21,7 @@ namespace Infraestructura.Seguridad
             this._configuration = configuration;
         }
 
-        public Task<(string tokenDeAcceso, string tokenDeRefresco, DateTime fechaDeExpiracion)> GenerarTokenDeAcceso(Administrador administrador)
+        public Task<(string tokenDeAcceso, string tokenDeRefresco, DateTime fechaDeExpiracion)> GenerarTokenDeAcceso(Usuario administrador)
         {
             try 
             {
@@ -29,8 +29,8 @@ namespace Infraestructura.Seguridad
                 // Estos representan la identidad y atributos del usuario
                 var claimsUsuario = new[]
                 {
-                new Claim(ClaimTypes.NameIdentifier, administrador.IdAdmin.ToString()), // ID del usuario como identificador único
-                new Claim(ClaimTypes.Email, administrador.NombreDeUsuario), // Correo del usuario
+                new Claim(ClaimTypes.NameIdentifier, administrador.IdUsuario.ToString()), // ID del usuario como identificador único
+                new Claim(ClaimTypes.Email, administrador.NombreUsuario), // Correo del usuario
                 new Claim(JwtRegisteredClaimNames.Jti, Guid.NewGuid().ToString()) // Identificador único del token (para trazabilidad)
             };
 
@@ -65,14 +65,14 @@ namespace Infraestructura.Seguridad
             }
         }
 
-        private string GenerarTokenDeRefresco(Administrador administrador, SigningCredentials credenciales)
+        private string GenerarTokenDeRefresco(Usuario administrador, SigningCredentials credenciales)
         {
             // Creamos los claims para el token de refresco (Refresh Token)
             // Estos deben ser mínimos, y pueden incluir un flag que lo distinga como tal
             var claimsRefresco = new[]
             {
                 new Claim("refresh", "true"), // Flag que indica que este token es de tipo "refresh"
-                new Claim(ClaimTypes.NameIdentifier, administrador.IdAdmin.ToString()) // ID del usuario
+                new Claim(ClaimTypes.NameIdentifier, administrador.IdUsuario.ToString()) // ID del usuario
             };
 
             // Se genera el token de refresco con una duración más larga (1 hora)
