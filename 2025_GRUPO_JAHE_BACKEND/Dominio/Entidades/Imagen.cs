@@ -16,9 +16,8 @@ namespace Dominio.Entidades
         public int IdImagen { get; set; }
 
         [Required]
-        [MaxLength(255)]
-        public string Url { get; set; } = string.Empty;
+        public string Ruta { get; set; } = string.Empty;
 
-        public bool Eliminado { get; set; } = false;
+        public bool Activa { get; set; } = true;
     }
 }

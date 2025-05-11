@@ -20,7 +20,7 @@ namespace _2025_GRUPO_JAHE_BACKEND.Controllers
         // GET: api/<FacilidadController>
         [Authorize]
         [HttpPost("ConsultaHabitaciones")]
-        public async Task<ActionResult<ResultadoConsultaHabitacionDTO>> Get(ConsultaHabitacionesParametrosDTO parametrosDTO)
+        public async Task<ActionResult<RespuestaConsultaTablaDTO<HabitacionConsultaDTO>>> Get(ConsultaHabitacionesParametrosDTO parametrosDTO)
         {
             try
             {

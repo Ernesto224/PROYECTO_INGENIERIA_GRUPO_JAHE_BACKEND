@@ -12,7 +12,7 @@ using Microsoft.EntityFrameworkCore;
 
 namespace Infraestructura.Repositorios
 {
-    public class OfertaRepositorio : Repository<Oferta>, IOfertaRepositorio
+    public class OfertaRepositorio : BaseRepositorio<Oferta>, IOfertaRepositorio
     {
 
         public OfertaRepositorio(ContextoDbSQLServer contexto) : base(contexto) { }

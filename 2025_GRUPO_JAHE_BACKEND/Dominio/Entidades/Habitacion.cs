@@ -21,10 +21,13 @@ namespace Dominio.Entidades
         [Required]
         public string Estado { get; set; } = string.Empty;
 
+        public bool Activa { get; set; } = true;
+
+        public DateTime FechaEstado { get; set; }
+
         [ForeignKey("TipoDeHabitacion")]
         public int IdTipoDeHabitacion { get; set; }
 
         public TipoDeHabitacion TipoDeHabitacion { get; set; } = null!;
-
     }
 }
