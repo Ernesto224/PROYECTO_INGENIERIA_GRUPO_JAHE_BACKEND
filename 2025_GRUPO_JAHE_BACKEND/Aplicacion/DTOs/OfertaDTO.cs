@@ -23,5 +23,7 @@ namespace Aplicacion.DTOs
         public bool Activo { get; set; }
 
         public TipoDeHabitacionDTO? TipoDeHabitacion { get; set; }
+
+        public ImagenDTO? Imagen { get; set; }
     }
 }

@@ -22,77 +22,166 @@ namespace Aplicacion.Servicios
             _unitOfWork = unitOfWork;
         }
 
-        public async Task<OfertaDTO> CrearOferta(OfertaDTO ofertaDTO)
+        public async Task<RespuestaDTO<OfertaDTO>> CrearOferta(OfertaDTO ofertaDTO)
         {
-            var oferta = new Oferta()
+            try
             {
-                IdOferta = ofertaDTO.IdOferta,
-                Nombre = ofertaDTO.Nombre,
-                FechaInicio = ofertaDTO.FechaInicio,
-                FechaFinal = ofertaDTO.FechaFinal,
-                Porcentaje = ofertaDTO.Porcentaje,
-                Activa = ofertaDTO.Activo,
-                IdTipoDeHabitacion = ofertaDTO.TipoDeHabitacion.IdTipoDeHabitacion
-            };
-
-            await this._ofertaRepositorio.CrearAsync(oferta);
-
-            await this._unitOfWork.SaveChangesAsync();
-
-            return ofertaDTO;
-        }
-
-        public async Task<List<OfertaDTO>> VerOfertas()
-        {
-            var ofertas = await _ofertaRepositorio.GetAllAsync<Oferta>(o => o.TipoDeHabitacion);
-
-            return ofertas.Select(o => new OfertaDTO
-            {
-                IdOferta = o.IdOferta,
-                Nombre = o.Nombre,
-                FechaInicio = o.FechaInicio,
-                FechaFinal = o.FechaFinal,
-                Porcentaje = o.Porcentaje,
-                Activo = o.Activa,
-                TipoDeHabitacion = new TipoDeHabitacionDTO 
+                var oferta = new Oferta()
                 {
-                    IdTipoDeHabitacion = o.IdTipoDeHabitacion,
-                    Nombre = o.TipoDeHabitacion.Nombre,
-                    TarifaDiaria = (decimal)o.TipoDeHabitacion.TarifaDiaria
-                }
-            }).ToList();
+                    IdOferta = ofertaDTO.IdOferta,
+                    Nombre = ofertaDTO.Nombre,
+                    FechaInicio = ofertaDTO.FechaInicio,
+                    FechaFinal = ofertaDTO.FechaFinal,
+                    Porcentaje = ofertaDTO.Porcentaje,
+                    Activa = true,
+                    IdTipoDeHabitacion = ofertaDTO.TipoDeHabitacion.IdTipoDeHabitacion,
+                    IdImagen = ofertaDTO.Imagen.IdImagen
+                };
+
+                await this._ofertaRepositorio.CrearAsync(oferta);
+
+                await this._unitOfWork.SaveChangesAsync();
+
+                return new RespuestaDTO<OfertaDTO>
+                {
+                    Texto = "Oferta creada correctamente",
+                    EsCorrecto = true,
+                    Objeto = ofertaDTO
+                };
+            }
+            catch (Exception ex)
+            {
+                return new RespuestaDTO<OfertaDTO>
+                {
+                    Texto = $"Error creando la oferta: {ex.Message}, {ex.InnerException}",
+                    EsCorrecto = false,
+                    Objeto = null
+                };
+            }
+            
         }
 
-        //public async Task<List<OfertaDTO>> VerOfertasActivas()
-        //{
-        //    var ofertas = await this._ofertaRepositorio.VerOfertasActivas();
+        public async Task<RespuestaDTO<OfertaDTO>> EliminarOferta(int idOferta)
+        {
+            try
+            {
+                var oferta = await this._ofertaRepositorio.VerOfertaPorId(idOferta);
 
-        //    if (ofertas == null || !ofertas.Any())
-        //        throw new Exception("No se encontraron ofertas activas.");
+                await this._ofertaRepositorio.DeleteAsync(oferta);
 
-        //    return ofertas.Select(oferta => new OfertaDTO
-        //    {
-        //        IdOferta = oferta.IdOferta,
-        //        FechaInicio = oferta.FechaInicio,
-        //        FechaFinal = oferta.FechaFinal,
-        //        Nombre = oferta.Nombre,
-        //        Porcentaje = oferta.Porcentaje,
-        //        Activo = oferta.Activo,
-        //        TipoDeHabitacion = new TipoDeHabitacionDTO
-        //        {
-        //            IdTipoDeHabitacion = oferta.IdTipoDeHabitacion,
-        //            Nombre = oferta.TipoDeHabitacion.Nombre,
-        //            Descripcion = oferta.TipoDeHabitacion.Descripcion,
-        //            TarifaDiaria = (decimal)oferta.TipoDeHabitacion.TarifaDiaria,
-        //            Imagen = new ImagenDTO
-        //            {
-        //                IdImagen = oferta.TipoDeHabitacion.Imagen.IdImagen,
-        //                Ruta = oferta.TipoDeHabitacion.Imagen.Ruta
-        //            }
-        //        }
-        //    }).ToList();
-        //}
+                var resultado = await this._unitOfWork.SaveChangesAsync();
 
 
+                return new RespuestaDTO<OfertaDTO>
+                {
+                    Texto = "Oferta eliminada correctamente",
+                    EsCorrecto = true,
+                    Objeto = null
+                };
+
+            } 
+            catch (Exception ex)
+            {
+                return new RespuestaDTO<OfertaDTO>
+                {
+                    Texto = $"Error eliminando oferta: {ex.Message}",
+                    EsCorrecto = false,
+                    Objeto = null
+                };
+            }
+            
+        }
+
+        public async Task<RespuestaDTO<OfertaDTO>> ModificarOferta(OfertaDTO ofertaDTO)
+        {
+            try
+            {
+                var oferta = await this._ofertaRepositorio.VerOfertaPorId(ofertaDTO.IdOferta);
+
+                oferta.Nombre = ofertaDTO.Nombre;
+                oferta.FechaInicio = ofertaDTO.FechaInicio;
+                oferta.FechaFinal = ofertaDTO.FechaFinal;
+                oferta.Porcentaje = ofertaDTO.Porcentaje;
+                oferta.Activa = ofertaDTO.Activo;
+                oferta.IdTipoDeHabitacion = ofertaDTO.TipoDeHabitacion.IdTipoDeHabitacion;
+                oferta.IdImagen = ofertaDTO.Imagen.IdImagen;
+
+                await this._ofertaRepositorio.UpdateAsync(oferta);
+
+                var resultado = await this._unitOfWork.SaveChangesAsync();
+
+
+                return new RespuestaDTO<OfertaDTO>
+                {
+                    Texto = "Oferta modificada correctamente",
+                    EsCorrecto = true,
+                    Objeto = null
+                };
+
+            }
+            catch (Exception ex)
+            {
+                return new RespuestaDTO<OfertaDTO>
+                {
+                    Texto = $"Error modificando oferta: {ex.Message}",
+                    EsCorrecto = false,
+                    Objeto = null
+                };
+            }
+        }
+
+        public async Task<RespuestaConsultaDTO<OfertaDTO>> VerOfertas(int numeroDePagina, int maximoDeDatos, bool irALaUltimaPagina)
+        {
+            var resultado = await _ofertaRepositorio.VerOfertas(numeroDePagina, maximoDeDatos, irALaUltimaPagina);
+
+            return new RespuestaConsultaDTO<OfertaDTO>
+            {
+                Lista = resultado.ofertas.Select(h => new OfertaDTO
+                {
+                    IdOferta = h.IdOferta,
+                    Nombre = h.Nombre,
+                    FechaInicio = h.FechaInicio,
+                    FechaFinal = h.FechaFinal,
+                    Activo = h.Activa,
+                    Porcentaje = h.Porcentaje,
+                    TipoDeHabitacion = new TipoDeHabitacionDTO { IdTipoDeHabitacion = h.TipoDeHabitacion.IdTipoDeHabitacion },
+                    Imagen = null
+
+                }
+                ),
+                TotalRegistros = resultado.datosTotales,
+                PaginaActual = resultado.paginaActual,
+                MaximoPorPagina = maximoDeDatos
+            };
+        }
+
+        public async Task<List<OfertaDTO>> VerOfertasActivas()
+        {
+            var ofertas = await this._ofertaRepositorio.VerOfertasActivas();
+
+            if (ofertas == null || !ofertas.Any())
+            {
+                return null;
+            }
+            else
+            {
+                List<OfertaDTO> ofertasActivas = new List<OfertaDTO>();
+                foreach (var oferta in ofertas)
+                {
+                    ofertasActivas.Add(new OfertaDTO
+                    {
+                        IdOferta = oferta.IdOferta,
+                        Nombre = oferta.Nombre,
+                        FechaInicio = oferta.FechaInicio,
+                        FechaFinal = oferta.FechaFinal,
+                        Activo = oferta.Activa,
+                        Porcentaje = oferta.Porcentaje,
+                        TipoDeHabitacion = new TipoDeHabitacionDTO { IdTipoDeHabitacion = oferta.TipoDeHabitacion.IdTipoDeHabitacion },
+                        Imagen = new ImagenDTO { Url = oferta.Imagen.Ruta }
+                    });
+                }
+                return ofertasActivas;
+            }
+        }
     }
 }

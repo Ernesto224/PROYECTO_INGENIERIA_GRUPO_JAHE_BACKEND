@@ -55,6 +55,9 @@ builder.Services.AddScoped<IHabitacionRepositorio, HabitacionRepositorio>();
 builder.Services.AddScoped<IHabitacionServicio, HabitacionServicio>();
 builder.Services.AddScoped<IAdministradorRepositorio, AdministradorRepositorio>();
 builder.Services.AddScoped<IAutenticacionServicio, AutenticacionServicio>();
+builder.Services.AddScoped<IOfertaRepositorio, OfertaRepositorio>();
+builder.Services.AddScoped<IOfertaServicio, OfertaServicio>();
+
 
 // Se optiene la URL de Cloudinary del archivo appsettings.json
 var cloudinaryUrl = builder.Configuration.GetSection("Cloudinary").GetSection("Ruta").Value;

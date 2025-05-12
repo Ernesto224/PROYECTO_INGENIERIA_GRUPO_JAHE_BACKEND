@@ -1,4 +1,5 @@
 ﻿using Aplicacion.DTOs;
+using Dominio.Entidades;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -9,10 +10,15 @@ namespace Aplicacion.Interfaces
 {
     public interface IOfertaServicio
     {
-        //public Task<List<OfertaDTO>> VerOfertasActivas();
 
-        public Task<OfertaDTO> CrearOferta(OfertaDTO ofertaDTO);
+        public Task<RespuestaDTO<OfertaDTO>> CrearOferta(OfertaDTO ofertaDTO);
 
-        public Task<List<OfertaDTO>> VerOfertas();
+        public Task<RespuestaConsultaDTO<OfertaDTO>> VerOfertas(int NumeroDePagina, int MaximoDeDatos, bool IrALaUltimaPagina);
+
+        public Task<List<OfertaDTO>> VerOfertasActivas();
+
+        public Task<RespuestaDTO<OfertaDTO>> ModificarOferta(OfertaDTO ofertaDTO);
+
+        public Task<RespuestaDTO<OfertaDTO>> EliminarOferta(int idOferta);
     }
 }

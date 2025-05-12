@@ -16,11 +16,12 @@ namespace _2025_GRUPO_JAHE_BACKEND.Controllers
         }
 
         [HttpGet]
-        public async Task<ActionResult<List<OfertaDTO>>> Get()
+        [Route("paginadas")]
+        public async Task<ActionResult<RespuestaConsultaDTO<OfertaDTO>>> Get(int NumeroDePagina, int MaximoDeDatos, bool IrALaUltimaPagina)
         {
             try
             {
-                var ofertaDTO = await this._ofertaServicio.VerOfertas();
+                var ofertaDTO = await this._ofertaServicio.VerOfertas(NumeroDePagina, MaximoDeDatos, IrALaUltimaPagina);
 
                 if (ofertaDTO == null)
                 {
@@ -34,18 +35,69 @@ namespace _2025_GRUPO_JAHE_BACKEND.Controllers
             }
         }
 
+        [HttpGet]
+        public async Task<IEnumerable<OfertaDTO>> Get()
+        {
+            List<OfertaDTO> ofertasActivas = await this._ofertaServicio.VerOfertasActivas();
+
+            if (ofertasActivas == null)
+            {
+                return null;
+            }
+
+            return ofertasActivas;
+
+        }
+
         [HttpPost]
         public async Task<ActionResult<OfertaDTO>> Post([FromBody] OfertaDTO ofertaDTO)
         {
             try
             {
-                var ofertaCreada = await this._ofertaServicio.CrearOferta(ofertaDTO);
+                RespuestaDTO<OfertaDTO> respuesta = await this._ofertaServicio.CrearOferta(ofertaDTO);
 
-                if (ofertaCreada == null)
+                if (respuesta == null)
                 {
                     return NotFound("No se pudo crear la oferta.");
                 }
-                return Ok(ofertaCreada);
+                return Ok(respuesta);
+            }
+            catch (Exception ex)
+            {
+                return NotFound(ex.Message);
+            }
+        }
+
+        [HttpDelete("{idOferta}")]
+        public async Task<ActionResult<RespuestaDTO<OfertaDTO>>> Delete(int idOferta)
+        {
+            try
+            {
+                RespuestaDTO<OfertaDTO> respuesta = await this._ofertaServicio.EliminarOferta(idOferta);
+
+                if (respuesta == null)
+                {
+                    return NotFound("No se pudo eliminar la oferta.");
+                }
+                return Ok(respuesta);
+            }
+            catch (Exception ex)
+            {
+                return NotFound(ex.Message);
+            }
+        }
+
+        [HttpPut]
+        public async Task<ActionResult<RespuestaDTO<OfertaDTO>>> Put(OfertaDTO ofertaDTO)
+        {
+            try
+            {
+                RespuestaDTO<OfertaDTO> respuesta = await this._ofertaServicio.ModificarOferta(ofertaDTO);
+                if (respuesta == null)
+                {
+                    return NotFound("No se pudo modificar la oferta.");
+                }
+                return Ok(respuesta);
             }
             catch (Exception ex)
             {
