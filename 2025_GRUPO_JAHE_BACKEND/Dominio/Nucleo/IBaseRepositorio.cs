@@ -9,9 +9,9 @@ namespace Dominio.Nucleo
 {
     public interface IBaseRepositorio<TEntity> where TEntity : class
     {
-        public Task<IEnumerable<T>> GetAllAsync<T>(params Expression<Func<T, object>>[] includes) where T : class;
-        public Task CrearAsync<T>(T entity) where T : class;
-        public Task UpdateAsync<T>(T entity) where T : class;
-        public Task DeleteAsync<T>(T entity) where T : class;
+        public Task<IEnumerable<TEntity>> GetAllAsync();
+        public Task CrearAsync(TEntity entity);
+        public Task UpdateAsync(TEntity entity);
+        public Task DeleteAsync(TEntity entity);
     }
 }

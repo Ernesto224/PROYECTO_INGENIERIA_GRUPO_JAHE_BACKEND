@@ -13,39 +13,34 @@ namespace Infraestructura.Nucleo
             this._context = context;
         }
 
-        public async Task CrearAsync<T>(T entity) where T : class
+        public virtual async Task CrearAsync(TEntity entity)
         {
             if (entity == null) throw new ArgumentNullException(nameof(entity));
 
-            await _context.Set<T>().AddAsync(entity);
+            await _context.Set<TEntity>().AddAsync(entity);
         }
 
-        public Task DeleteAsync<T>(T entity) where T : class
+        public virtual Task DeleteAsync(TEntity entity)
         {
             if (entity == null) throw new ArgumentNullException(nameof(entity));
 
-            _context.Set<T>().Remove(entity);
+            _context.Set<TEntity>().Remove(entity);
 
             return Task.CompletedTask;
         }
 
-        public async Task<IEnumerable<T>> GetAllAsync<T>(params Expression<Func<T, object>>[] includes) where T : class
+        public virtual async Task<IEnumerable<TEntity>> GetAllAsync()
         {
-            IQueryable<T> query = _context.Set<T>().AsNoTracking();
+            var entidades = await this._context.Set<TEntity>().ToListAsync();
 
-            foreach (var include in includes)
-            {
-                query = query.Include(include);
-            }
-
-            return await query.ToListAsync();
+            return entidades;
         }
 
-        public Task UpdateAsync<T>(T entity) where T : class
+        public virtual Task UpdateAsync(TEntity entity)
         {
             if (entity == null) throw new ArgumentNullException(nameof(entity));
 
-            _context.Set<T>().Update(entity);
+            _context.Set<TEntity>().Update(entity);
 
             return Task.CompletedTask;
         }
