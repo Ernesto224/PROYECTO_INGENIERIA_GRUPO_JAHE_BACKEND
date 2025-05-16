@@ -57,6 +57,8 @@ builder.Services.AddScoped<IAdministradorRepositorio, AdministradorRepositorio>(
 builder.Services.AddScoped<IAutenticacionServicio, AutenticacionServicio>();
 builder.Services.AddScoped<IOfertaRepositorio, OfertaRepositorio>();
 builder.Services.AddScoped<IOfertaServicio, OfertaServicio>();
+builder.Services.AddScoped<ITemporadaRepositorio, TemporadaRepositorio>();
+
 
 
 // Se optiene la URL de Cloudinary del archivo appsettings.json

@@ -30,6 +30,8 @@ namespace Infraestructura.Persistencia
         public DbSet<Cliente> Clientes { get; set; }
         public DbSet<Usuario> Administradores { get; set; }
 
+        public DbSet<Temporada> Temporadas { get; set; }
+
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             base.OnModelCreating(modelBuilder);
