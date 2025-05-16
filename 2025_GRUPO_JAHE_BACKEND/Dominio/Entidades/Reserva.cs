@@ -41,5 +41,15 @@ namespace Dominio.Entidades
         public int IdTransaccion { get; set; }
 
         public Transaccion? Transaccion { get; set; } = null;
+
+        public decimal CalcularMontoBase(
+        Habitacion habitacion,
+        DateTime fechaLlegada,
+        DateTime fechaSalida)
+        {
+            TimeSpan diferencia = fechaSalida - fechaLlegada;
+            int dias = (int)diferencia.TotalDays;
+            return habitacion.TipoDeHabitacion.TarifaDiaria * dias;
+        }
     }
 }

@@ -14,7 +14,11 @@ namespace Aplicacion.Servicios
 {
     public class ReservaServicio : IReservaServicio
     {
-        private readonly IReservaRepositorio _repositorio;
+        private readonly IReservaRepositorio _repositorioReserva;
+
+        private readonly ITemporadaRepositorio _repositorioTemporada;
+
+        private readonly IOfertaRepositorio ofertaRepositorio;
 
         private readonly IServicioEmail _servicioEmail;
 
@@ -22,12 +26,16 @@ namespace Aplicacion.Servicios
 
 
         public ReservaServicio(IReservaRepositorio reservaRepositorio,
+                                ITemporadaRepositorio temporadaRepositorio,
                                 ITransactionMethods transaction,
                                 IServicioEmail servicioEmail,
+                                IOfertaRepositorio ofertaRepositorio)
         {
             this._repositorioReserva = reservaRepositorio;
             this._transaction = transaction;
             this._servicioEmail = servicioEmail;
+            this._repositorioTemporada = temporadaRepositorio;
+            this.ofertaRepositorio = ofertaRepositorio;
         }
 
         public async Task<List<string>> RealizarReserva(List<ReservaDTO> reservasDTO, ClienteDTO clienteDTO)
@@ -51,22 +59,32 @@ namespace Aplicacion.Servicios
 
 
                 // calcular el monto total
-                foreach (ReservaDTO reservaDTO in reservasDTO)
+                decimal montoTotal = 0;
+                var calculador = new CalcularPrecioService();
+                foreach (var reservaDTO in reservasDTO)
                 {
-                    var habitacion = await this._repositorio.VerHabitacion(reservaDTO.IdHabitacion);
-                    TimeSpan diferencia = reservaDTO.FechaSalida - reservaDTO.FechaLlegada;
-                    int cantidadDias = (int)diferencia.TotalDays;
-                    montoTotal += (decimal)habitacion.TipoDeHabitacion.TarifaDiaria * cantidadDias;
+                    var habitacion = await this._repositorioReserva.VerHabitacion(reservaDTO.IdHabitacion);
+                    var reserva = new Reserva();
+                    decimal montoBase = reserva.CalcularMontoBase(habitacion, reservaDTO.FechaLlegada, reservaDTO.FechaSalida);
+                    var temporada = await _repositorioTemporada.ObtenerTemporadaPorFecha(reservaDTO.FechaLlegada, reservaDTO.FechaSalida);
+
+                    if (temporada != null)
+                    {
+                        montoTotal += calculador.AplicarTemporada(montoBase, temporada);
+                    }
+
+                    else
+                    {
+                        montoTotal = montoBase; // No se aplica temporada
+                    }
+
+                        
                 }
 
 
                 // crear transaccion
-                var transaccion = await this._repositorio.RealizarTransaccion(montoTotal, "test");
-                if (transaccion == null)
-                {
-                    await this._transaction.RollbackAsync();
-                    return null;
-                }
+                var transaccion = Transaccion.Crear(montoTotal, "Reserva Hotel");
+                await _repositorioReserva.RealizarTransaccion(transaccion);
 
                 // insertar las reservas
                 List<string> idsReservas = new List<string>();
