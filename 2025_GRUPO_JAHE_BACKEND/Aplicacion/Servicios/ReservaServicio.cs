@@ -8,6 +8,7 @@ using Aplicacion.Interfaces;
 using Dominio.Entidades;
 using Dominio.Enumeraciones;
 using Dominio.Interfaces;
+using Dominio.Servicios_de_Dominio;
 
 namespace Aplicacion.Servicios
 {
@@ -20,12 +21,11 @@ namespace Aplicacion.Servicios
         private readonly ITransactionMethods _transaction;
 
 
-
         public ReservaServicio(IReservaRepositorio reservaRepositorio,
                                 ITransactionMethods transaction,
-                                IServicioEmail servicioEmail)
+                                IServicioEmail servicioEmail,
         {
-            this._repositorio = reservaRepositorio;
+            this._repositorioReserva = reservaRepositorio;
             this._transaction = transaction;
             this._servicioEmail = servicioEmail;
         }
@@ -37,7 +37,7 @@ namespace Aplicacion.Servicios
                 await this._transaction.BeginTransactionAsync();
 
                 // reconocer cliente, si no existe crear uno nuevo
-                var cliente = await this._repositorio.VerCliente(clienteDTO.Email);
+                var cliente = await this._repositorioReserva.VerCliente(clienteDTO.Email);
                 if (cliente == null)
                 {
                     cliente = new Cliente
@@ -49,7 +49,6 @@ namespace Aplicacion.Servicios
                     };
                 }
 
-                decimal montoTotal = 0;
 
                 // calcular el monto total
                 foreach (ReservaDTO reservaDTO in reservasDTO)
@@ -59,6 +58,7 @@ namespace Aplicacion.Servicios
                     int cantidadDias = (int)diferencia.TotalDays;
                     montoTotal += (decimal)habitacion.TipoDeHabitacion.TarifaDiaria * cantidadDias;
                 }
+
 
                 // crear transaccion
                 var transaccion = await this._repositorio.RealizarTransaccion(montoTotal, "test");
@@ -75,9 +75,9 @@ namespace Aplicacion.Servicios
 
                 foreach (ReservaDTO reservaDTO in reservasDTO)
                 {
-                    var habitacion = await this._repositorio.VerHabitacion(reservaDTO.IdHabitacion);
+                    var habitacion = await this._repositorioReserva.VerHabitacion(reservaDTO.IdHabitacion);
 
-                    if (!await this._repositorio.CambiarEstadoHabitacion(habitacion.IdHabitacion, EstadoDeHabitacion.RESERVADA.ToString()))
+                    if (!await this._repositorioReserva.CambiarEstadoHabitacion(habitacion.IdHabitacion, EstadoDeHabitacion.RESERVADA.ToString()))
                     {
                         await this._transaction.RollbackAsync();
                         return null;
@@ -94,15 +94,13 @@ namespace Aplicacion.Servicios
                         Transaccion = transaccion
                     };
 
-                    string idReserva = await this._repositorio.RealizarReserva(reserva);
+                    string idReserva = await this._repositorioReserva.RealizarReserva(reserva);
 
                     reservasRealizadas.Add(reserva);
 
                     idsReservas.Add(idReserva);
 
-                }
-
-                
+                } 
 
                 await this._transaction.CommitAsync();
 
@@ -123,12 +121,13 @@ namespace Aplicacion.Servicios
 
         public async Task<HabitacionDTO> VerHabitacionDisponible(ReservaDTO reservaDTO)
         {
-            var habitacion = await _repositorio.VerHabitacionDisponible(reservaDTO.IdTipoDeHabitacion, reservaDTO.FechaLlegada, reservaDTO.FechaSalida);
+            var habitacion = await _repositorioReserva.VerHabitacionDisponible(reservaDTO.IdTipoDeHabitacion, reservaDTO.FechaLlegada, reservaDTO.FechaSalida);
 
             if(habitacion == null)
             {
                 return null;
             }
+
 
 
             return new HabitacionDTO
@@ -147,26 +146,12 @@ namespace Aplicacion.Servicios
 
         public async Task<bool> CambiarEstadoHabitacion(int idHabitacion, string nuevoEstado)
         {
-            return await this._repositorio.CambiarEstadoHabitacion(idHabitacion, nuevoEstado);
-        }
-
-        public async Task<List<TipoDeHabitacionDTO>> VerTiposDeHabitacion()
-        {
-            var tiposDeHabitacionDTO = new List<TipoDeHabitacionDTO>();
-
-            tiposDeHabitacionDTO = (await this._repositorio.VerTiposDeHabitacion()).Select(t => new TipoDeHabitacionDTO
-            {
-                IdTipoDeHabitacion = t.IdTipoDeHabitacion,
-                Nombre = t.Nombre,
-                TarifaDiaria = t.TarifaDiaria
-            }).ToList();
-
-            return tiposDeHabitacionDTO;
+            return await this._repositorioReserva.CambiarEstadoHabitacion(idHabitacion, nuevoEstado);
         }
 
         public async Task<IEnumerable<AlternativaDeReservaDTO>> VerAlternativasDisponibles(ReservaDTO reservaDTO)
         {
-            var alternativasDisponibles = await this._repositorio.VerAlternativasDisponibles(
+            var alternativasDisponibles = await this._repositorioReserva.VerAlternativasDisponibles(
                 reservaDTO.IdTipoDeHabitacion,
                 reservaDTO.FechaLlegada,
                 reservaDTO.FechaSalida

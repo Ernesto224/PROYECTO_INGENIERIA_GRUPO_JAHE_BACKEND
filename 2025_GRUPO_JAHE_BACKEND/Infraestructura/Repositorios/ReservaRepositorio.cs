@@ -24,7 +24,7 @@ namespace Infraestructura.Repositorios
         public async Task<string> RealizarReserva(Reserva reserva)
         {
             var resultado = await _contexto.Reservas.AddAsync(reserva);
-            await _contexto.SaveChangesAsync();
+            //await _contexto.SaveChangesAsync();
 
             string idReserva = resultado.Entity.IdReserva.ToString();
 
@@ -75,15 +75,8 @@ namespace Infraestructura.Repositorios
             }
         }
 
-        public async Task<Transaccion> RealizarTransaccion(decimal monto, string descripcion)
+        public async Task<Transaccion> RealizarTransaccion(Transaccion transaccion)
         {
-            var transaccion = new Transaccion
-            {
-                Monto = monto,
-                Descripcion = descripcion,
-                Fecha = DateTime.Now
-            };
-
             var resultado = await _contexto.Transacciones.AddAsync(transaccion);
 
             return resultado.Entity;
@@ -105,13 +98,6 @@ namespace Infraestructura.Repositorios
             await this._contexto.SaveChangesAsync();
 
             return true;
-        }
-
-        public Task<List<TipoDeHabitacion>> VerTiposDeHabitacion()
-        {
-            var tiposDeHabitacion = _contexto.TipoDeHabitaciones.ToListAsync();
-
-            return tiposDeHabitacion;
         }
 
         public Task<Cliente> VerCliente(string email)

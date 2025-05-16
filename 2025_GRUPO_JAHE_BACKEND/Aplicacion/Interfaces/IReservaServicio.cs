@@ -19,6 +19,5 @@ namespace Aplicacion.Interfaces
 
         public Task<bool> CambiarEstadoHabitacion(int idHabitacion, string estadoNuevo);
 
-        public Task<List<TipoDeHabitacionDTO>> VerTiposDeHabitacion();
     }
 }
