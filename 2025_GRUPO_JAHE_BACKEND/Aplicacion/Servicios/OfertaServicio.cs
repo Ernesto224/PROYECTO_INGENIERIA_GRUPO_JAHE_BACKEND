@@ -16,10 +16,13 @@ namespace Aplicacion.Servicios
 
         private readonly ITransactionMethods _unitOfWork;
 
-        public OfertaServicio(IOfertaRepositorio ofertaRepositorio, ITransactionMethods unitOfWork)
+        private readonly IServicioAlmacenamientoImagenes _servicioAlmacenamientoImagenes;
+
+        public OfertaServicio(IOfertaRepositorio ofertaRepositorio, ITransactionMethods unitOfWork, IServicioAlmacenamientoImagenes servicioAlmacenamientoImagenes)
         {
             _ofertaRepositorio = ofertaRepositorio;
             _unitOfWork = unitOfWork;
+            _servicioAlmacenamientoImagenes = servicioAlmacenamientoImagenes;
         }
 
         public async Task<RespuestaDTO<OfertaDTO>> CrearOferta(OfertaDTO ofertaDTO)
@@ -92,10 +95,12 @@ namespace Aplicacion.Servicios
             
         }
 
-        public async Task<RespuestaDTO<OfertaDTO>> ModificarOferta(OfertaDTO ofertaDTO)
+        public async Task<RespuestaDTO<OfertaDTO>> ModificarOferta(OfertaModificarDTO ofertaModificarDTO)
         {
             try
             {
+
+                var ofertaDTO = ofertaModificarDTO.ofertaDTO;
                 var oferta = await this._ofertaRepositorio.VerOfertaPorId(ofertaDTO.IdOferta);
 
                 oferta.Nombre = ofertaDTO.Nombre;
@@ -104,7 +109,34 @@ namespace Aplicacion.Servicios
                 oferta.Porcentaje = ofertaDTO.Porcentaje;
                 oferta.Activa = ofertaDTO.Activo;
                 oferta.IdTipoDeHabitacion = ofertaDTO.TipoDeHabitacion.IdTipoDeHabitacion;
-                oferta.IdImagen = ofertaDTO.Imagen.IdImagen;
+
+                string? urlImagen = null;
+
+                if (ofertaModificarDTO.Imagen != null)
+                {
+                    try
+                    {
+                        urlImagen = await this._servicioAlmacenamientoImagenes
+                            .SubirImagen(ofertaModificarDTO.Imagen, ofertaModificarDTO.NombreArchivo);
+                    }
+                    catch (Exception ex)
+                    {
+                        return new RespuestaDTO<OfertaDTO>
+                        {
+                            Texto = $"Error subiendo imagen: {ex.Message}",
+                            EsCorrecto = false,
+                            Objeto = null
+                        };
+                    }
+                    oferta.Imagen = new Imagen
+                    {
+                        Ruta = urlImagen
+                    };                
+                }
+                else
+                {
+                    //oferta.IdImagen = ofertaDTO.Imagen.IdImagen;
+                }
 
                 await this._ofertaRepositorio.UpdateAsync(oferta);
 
@@ -144,8 +176,8 @@ namespace Aplicacion.Servicios
                     FechaFinal = h.FechaFinal,
                     Activo = h.Activa,
                     Porcentaje = h.Porcentaje,
-                    TipoDeHabitacion = new TipoDeHabitacionDTO { IdTipoDeHabitacion = h.TipoDeHabitacion.IdTipoDeHabitacion },
-                    Imagen = null
+                    TipoDeHabitacion = new TipoDeHabitacionDTO { IdTipoDeHabitacion = h.TipoDeHabitacion.IdTipoDeHabitacion, Nombre = h.TipoDeHabitacion.Nombre },
+                    Imagen = new ImagenDTO { IdImagen = h.Imagen.IdImagen, Url = h.Imagen.Ruta }
 
                 }
                 ),

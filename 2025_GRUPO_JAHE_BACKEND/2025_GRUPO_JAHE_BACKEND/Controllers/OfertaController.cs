@@ -15,13 +15,13 @@ namespace _2025_GRUPO_JAHE_BACKEND.Controllers
             this._ofertaServicio = ofertaServicio;
         }
 
-        [HttpGet]
+        [HttpPost]
         [Route("paginadas")]
-        public async Task<ActionResult<RespuestaConsultaDTO<OfertaDTO>>> Get(int NumeroDePagina, int MaximoDeDatos, bool IrALaUltimaPagina)
+        public async Task<ActionResult<RespuestaConsultaDTO<OfertaDTO>>> Post(ConsultaPaginadaBaseDTO parametros)
         {
             try
             {
-                var ofertaDTO = await this._ofertaServicio.VerOfertas(NumeroDePagina, MaximoDeDatos, IrALaUltimaPagina);
+                var ofertaDTO = await this._ofertaServicio.VerOfertas(parametros.NumeroDePagina, parametros.MaximoDeDatos, parametros.IrALaUltimaPagina);
 
                 if (ofertaDTO == null)
                 {
@@ -88,11 +88,11 @@ namespace _2025_GRUPO_JAHE_BACKEND.Controllers
         }
 
         [HttpPut]
-        public async Task<ActionResult<RespuestaDTO<OfertaDTO>>> Put(OfertaDTO ofertaDTO)
+        public async Task<ActionResult<RespuestaDTO<OfertaDTO>>> Put(OfertaModificarDTO ofertaModificarDTO)
         {
             try
             {
-                RespuestaDTO<OfertaDTO> respuesta = await this._ofertaServicio.ModificarOferta(ofertaDTO);
+                RespuestaDTO<OfertaDTO> respuesta = await this._ofertaServicio.ModificarOferta(ofertaModificarDTO);
                 if (respuesta == null)
                 {
                     return NotFound("No se pudo modificar la oferta.");

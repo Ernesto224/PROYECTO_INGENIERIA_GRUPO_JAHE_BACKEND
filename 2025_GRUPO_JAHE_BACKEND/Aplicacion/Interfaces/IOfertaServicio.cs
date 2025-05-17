@@ -17,7 +17,7 @@ namespace Aplicacion.Interfaces
 
         public Task<List<OfertaDTO>> VerOfertasActivas();
 
-        public Task<RespuestaDTO<OfertaDTO>> ModificarOferta(OfertaDTO ofertaDTO);
+        public Task<RespuestaDTO<OfertaDTO>> ModificarOferta(OfertaModificarDTO ofertaModificarDTO);
 
         public Task<RespuestaDTO<OfertaDTO>> EliminarOferta(int idOferta);
     }

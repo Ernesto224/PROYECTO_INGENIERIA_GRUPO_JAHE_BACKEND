@@ -25,7 +25,7 @@ namespace Infraestructura.Repositorios
 
         public override async Task DeleteAsync(Oferta oferta)
         {
-            oferta.Activa = false;
+            oferta.Activa = !oferta.Activa;
 
             await base.UpdateAsync(oferta);
         }
@@ -33,7 +33,8 @@ namespace Infraestructura.Repositorios
         public async Task<(IEnumerable<Oferta> ofertas, int datosTotales, int paginaActual)> VerOfertas(int numeroDePagina, int maximoDeDatos, bool irALaUltimaPagina)
         {
             var ofertas = _contexto.Ofertas
-                .Include(o => o.TipoDeHabitacion);
+                .Include(o => o.TipoDeHabitacion)
+                .Include(o => o.Imagen);
 
             int totalRegistros = await ofertas.CountAsync();
 
