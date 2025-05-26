@@ -77,7 +77,7 @@ namespace Aplicacion.Servicios
 
                 return new RespuestaDTO<OfertaDTO>
                 {
-                    Texto = "Oferta eliminada correctamente",
+                    Texto = "Estado actualizado correctamente",
                     EsCorrecto = true,
                     Objeto = null
                 };
@@ -114,20 +114,10 @@ namespace Aplicacion.Servicios
 
                 if (ofertaModificarDTO.Imagen != null)
                 {
-                    try
-                    {
-                        urlImagen = await this._servicioAlmacenamientoImagenes
-                            .SubirImagen(ofertaModificarDTO.Imagen, ofertaModificarDTO.NombreArchivo);
-                    }
-                    catch (Exception ex)
-                    {
-                        return new RespuestaDTO<OfertaDTO>
-                        {
-                            Texto = $"Error subiendo imagen: {ex.Message}",
-                            EsCorrecto = false,
-                            Objeto = null
-                        };
-                    }
+                   
+                    urlImagen = await this._servicioAlmacenamientoImagenes
+                        .SubirImagen(ofertaModificarDTO.Imagen, ofertaModificarDTO.NombreArchivo);
+                    
                     oferta.Imagen = new Imagen
                     {
                         Ruta = urlImagen
