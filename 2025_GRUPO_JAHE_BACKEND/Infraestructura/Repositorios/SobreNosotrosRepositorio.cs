@@ -91,7 +91,6 @@ namespace Infraestructura.Repositorios
                 {
                     Console.WriteLine("Repository - No se encontraron registros de SobreNosotros");
                 }
-
                 return resultado;
             }
             catch (InvalidOperationException ex)

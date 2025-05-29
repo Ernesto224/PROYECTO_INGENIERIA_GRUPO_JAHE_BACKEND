@@ -71,7 +71,7 @@ namespace Aplicacion.Servicios
             {
                 Descripcion = sobreNosotros.Descripcion,
                 Imagenes = sobreNosotros.ImagenesSobreNosotros
-                    .Where(imagen => !imagen.Imagen.Activa)
+                    .Where(imagen => imagen.Imagen.Activa)
                     .Select(img => new ImagenDTO
                     {
                         IdImagen = img.Imagen.IdImagen,
