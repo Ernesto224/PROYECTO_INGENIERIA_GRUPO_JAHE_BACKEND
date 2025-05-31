@@ -14,19 +14,19 @@ namespace Infraestructura.ServiciosExternos
         private readonly string _emailServiceUrl;
         private readonly HttpClient _httpClient;
 
-
         public ServicioEmail(string emailServiceUrl, HttpClient httpClient)
         {
             _emailServiceUrl = emailServiceUrl;
             _httpClient = httpClient;
         }
+
         public async Task<bool> enviarEmail(string email, string asunto, string mensaje)
         {
             try
             {
                 var requestBody = new
                 {
-                    email = email,
+                    email,
                     subject = asunto,
                     message = mensaje
                 };

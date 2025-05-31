@@ -88,7 +88,7 @@ builder.Services.AddAuthentication(config => {
         (Encoding.UTF8.GetBytes(builder.Configuration["JwtSecretKey:key"]!))
     };
 });
-var servicioEmailUrl = builder.Configuration.GetSection("EmailServiceApp").GetSection("Ruta").Value;
+var servicioEmailUrl = builder.Configuration.GetSection("EmailServiceApp").GetSection("Url").Value;
 builder.Services.AddScoped<IServicioEmail>(servicioEmail => new ServicioEmail(servicioEmailUrl!, new HttpClient()));
 
 
