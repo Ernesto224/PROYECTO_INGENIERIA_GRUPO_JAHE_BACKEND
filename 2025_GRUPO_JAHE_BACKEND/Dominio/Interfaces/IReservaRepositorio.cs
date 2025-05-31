@@ -15,13 +15,11 @@ namespace Dominio.Interfaces
 
         public Task<bool> CambiarEstadoHabitacion(int idHabitacion, string estadoNuevo);
 
-        public Task<Transaccion> RealizarTransaccion(decimal monto, string descripcion);
+        public Task<Transaccion> RealizarTransaccion(Transaccion transaccion);
 
         public Task<Habitacion> VerHabitacionDisponible(int idTipoHabitacion, DateTime fechaLlegada, DateTime fechaSalida);
 
         public Task<IEnumerable<(TipoDeHabitacion tipo, DateTime inicio, DateTime fin)>> VerAlternativasDisponibles(int idTipoHabitacion, DateTime fechaLlegada, DateTime fechaSalida);
-
-        public Task<List<TipoDeHabitacion>> VerTiposDeHabitacion();
 
         public Task<Cliente> VerCliente(string email);
 

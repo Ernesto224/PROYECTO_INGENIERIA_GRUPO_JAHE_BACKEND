@@ -13,29 +13,45 @@ namespace Aplicacion.Servicios
     public class SobreNosotrosServicio: ISobreNosotrosServicio
     {
         private readonly ISobreNosotrosRepositorio _sobreNosotrosRepositorio;
+        private readonly IServicioAlmacenamientoImagenes _servicioAlmacenamientoImagenes;
 
-        public SobreNosotrosServicio(ISobreNosotrosRepositorio sobreNosotrosRepositorio)
+        public SobreNosotrosServicio(ISobreNosotrosRepositorio sobreNosotrosRepositorio, IServicioAlmacenamientoImagenes servicioAlmacenamientoImagenes)
         {
             _sobreNosotrosRepositorio = sobreNosotrosRepositorio;
+            _servicioAlmacenamientoImagenes = servicioAlmacenamientoImagenes;
         }
 
-        public async Task<SobreNosotrosDTO> CambiarImagenGaleriaSobreNosotros(SobreNosotrosDTO sobreNosotrosDTO)
+        public async Task<SobreNosotrosDTO> CambiarImagenGaleriaSobreNosotros(SobreNosotrosModificarDTO galeriaModificarDTO)
         {
+            string? urlImagen = null;
+
+            if (galeriaModificarDTO.Imagen != null)
+            {
+                urlImagen = await this._servicioAlmacenamientoImagenes
+                    .SubirImagen(galeriaModificarDTO.Imagen, galeriaModificarDTO.NombreArchivo);
+            }
             var sobreNosotroActualizado = await _sobreNosotrosRepositorio.CambiarImagenGaleriaSobreNosotros(new SobreNosotros
             {
-                ImagenesSobreNosotros = sobreNosotrosDTO.Imagenes.Select(imagen => new Imagen_SobreNosotros
-                {
-                    IdImagen = imagen.IdImagen,
-                }).ToList()
-            });
+                IdSobreNosotros = galeriaModificarDTO.IdSobreNosotros,
+                ImagenesSobreNosotros = new List<Imagen_SobreNosotros>
+               {
+                   new Imagen_SobreNosotros
+                   {
+                       IdImagen = galeriaModificarDTO.IdImagen,
+                       IdSobreNosotros = galeriaModificarDTO.IdSobreNosotros,
+                   }
+               }
+            }, urlImagen);
+
             return new SobreNosotrosDTO
             {
                 Descripcion = sobreNosotroActualizado.Descripcion,
-                Imagenes = sobreNosotroActualizado.ImagenesSobreNosotros.Where(imagen => !imagen.Imagen.Eliminado)
-                .Select(img=> new ImagenDTO
+                Imagenes = sobreNosotroActualizado.ImagenesSobreNosotros.
+                Where(imagen => imagen.Imagen != null && imagen.Imagen.Activa)
+                .Select(img => new ImagenDTO
                 {
                     IdImagen = img.Imagen.IdImagen,
-                    Url = img.Imagen.Url
+                    Url = img.Imagen.Ruta
                 }).ToList()
             };
         }
@@ -50,11 +66,11 @@ namespace Aplicacion.Servicios
             {
                 Descripcion = sobreNosotrosActualizado.Descripcion,
                 Imagenes = sobreNosotrosActualizado.ImagenesSobreNosotros
-                    .Where(imagen => !imagen.Imagen.Eliminado)
+                    .Where(imagen => imagen.Imagen != null && imagen.Imagen.Activa)
                     .Select(img => new ImagenDTO
                     {
                         IdImagen = img.Imagen.IdImagen,
-                        Url = img.Imagen.Url
+                        Url = img.Imagen.Ruta
                     }).ToList()
 
             };
@@ -69,13 +85,14 @@ namespace Aplicacion.Servicios
 
             return new SobreNosotrosDTO
             {
+                idSobreNosotros = sobreNosotros.IdSobreNosotros,
                 Descripcion = sobreNosotros.Descripcion,
                 Imagenes = sobreNosotros.ImagenesSobreNosotros
-                    .Where(imagen => !imagen.Imagen.Eliminado)
+                    .Where(imagen => imagen.Imagen != null && imagen.Imagen.Activa)
                     .Select(img => new ImagenDTO
                     {
-                        IdImagen = img.Imagen.IdImagen,
-                        Url = img.Imagen.Url
+                        IdImagen = img.Imagen.IdImagen, 
+                        Url = img.Imagen.Ruta
                     }).ToList()
             };
         }

@@ -25,8 +25,7 @@ namespace Dominio.Entidades
         [Required]
         public string Estado { get; set; } = string.Empty;
 
-        [Required]
-        public bool Activo { get; set; } = false;
+        public bool Activa { get; set; } = true;
 
         [ForeignKey("Cliente")]
         public int IdCliente { get; set; }
@@ -42,5 +41,15 @@ namespace Dominio.Entidades
         public int IdTransaccion { get; set; }
 
         public Transaccion? Transaccion { get; set; } = null;
+
+        public decimal CalcularMontoBase(
+        Habitacion habitacion,
+        DateTime fechaLlegada,
+        DateTime fechaSalida)
+        {
+            TimeSpan diferencia = fechaSalida - fechaLlegada;
+            int dias = (int)diferencia.TotalDays;
+            return habitacion.TipoDeHabitacion.TarifaDiaria * dias;
+        }
     }
 }

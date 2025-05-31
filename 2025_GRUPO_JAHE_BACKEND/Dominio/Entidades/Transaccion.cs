@@ -23,5 +23,17 @@ namespace Dominio.Entidades
 
         [Required]
         public string Descripcion { get; set; } = string.Empty;
+
+        public static Transaccion Crear(decimal monto, string descripcion)
+        {
+            if (monto <= 0) throw new ArgumentException("Monto inválido");
+
+            return new Transaccion
+            {
+                Monto = monto,
+                Descripcion = descripcion,
+                Fecha = DateTime.UtcNow
+            };
+        }
     }
 }

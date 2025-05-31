@@ -10,7 +10,10 @@ namespace Aplicacion.Interfaces
 {
     public interface IHabitacionServicio
     {
-        public Task<ResultadoConsultaHabitacionDTO> ConsultarDisponibilidadDeHabitaciones(int[] idTiposHabitacion,
+        public Task<RespuestaConsultaDTO<HabitacionConsultaDTO>> ConsultarDisponibilidadDeHabitaciones(int[] idTiposHabitacion,
             DateTime fechaLlegada, DateTime fechaSalida, int numeroDePagina, int maximoDeDatos, bool irALaUltimaPagina);
+
+        public Task<RespuestaConsultaDTO<HabitacionConEstadoDTO>> ConsultarDisponibilidadDeHabitacionesHoy(int numeroDePagina, int maximoDeDatos, bool irALaUltimaPagina);
+
     }
 }

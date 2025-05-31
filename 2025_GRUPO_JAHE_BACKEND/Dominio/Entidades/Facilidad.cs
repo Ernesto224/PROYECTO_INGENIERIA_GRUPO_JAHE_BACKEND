@@ -1,10 +1,5 @@
-﻿using System;
-using System.Collections.Generic;
-using System.ComponentModel.DataAnnotations;
+﻿using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace Dominio.Entidades
 {
@@ -16,7 +11,6 @@ namespace Dominio.Entidades
         public int IdFacilidad { get; set; }
 
         [Required]
-        [MaxLength(int.MaxValue)]
         public string Descripcion { get; set; } = string.Empty;
 
         // Clave foránea

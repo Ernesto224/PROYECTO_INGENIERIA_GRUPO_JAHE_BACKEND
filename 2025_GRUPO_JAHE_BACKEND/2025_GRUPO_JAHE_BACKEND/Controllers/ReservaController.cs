@@ -92,20 +92,5 @@ namespace _2025_GRUPO_JAHE_BACKEND.Controllers
             }
         }
 
-        [HttpGet]
-        [Route("tipos-de-habitacion")]
-        public async Task<ActionResult<List<TipoDeHabitacionDTO>>> VerTiposDeHabitacion()
-        {
-            var resultado = await this.reservaServicio.VerTiposDeHabitacion();
-
-            if (resultado != null)
-            {
-                return Ok(resultado);
-            }
-            else
-            {
-                return NotFound();
-            }
-        }
     }
 }

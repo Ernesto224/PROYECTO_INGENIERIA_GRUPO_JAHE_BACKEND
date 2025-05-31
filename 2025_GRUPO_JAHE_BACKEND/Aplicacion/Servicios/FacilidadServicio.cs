@@ -29,12 +29,16 @@ namespace Aplicacion.Servicios
                 // Si el atributo Imagen es nulo, no se sube una nueva imagen.
                 string? urlImagen = null;
 
+                Console.WriteLine($"LA IMAGEN QUE VIENE DE PARAMETRO: {facilidadModificarDTO.Imagen}");
                 if (facilidadModificarDTO.Imagen != null)
                 {
                     // Se sube la imagen y obtenemos la URL
                     urlImagen = await this._servicioAlmacenamientoImagenes
                         .SubirImagen(facilidadModificarDTO.Imagen, facilidadModificarDTO.NombreArchivo);
                 }
+
+                Console.WriteLine($"LA IMAGEN DESPUES DEL SERVICIO DE CLOUDINARY: {urlImagen}");
+
 
                 // Se crea el objeto de la entidad a modificar
                 var facilidad = new Facilidad
@@ -43,7 +47,7 @@ namespace Aplicacion.Servicios
                     Descripcion = facilidadModificarDTO.Descripcion,
                     Imagen = new Imagen
                     {
-                        Url = urlImagen
+                        Ruta = urlImagen
                     }
                 };
 
@@ -72,7 +76,7 @@ namespace Aplicacion.Servicios
                 Imagen = facilidad.Imagen == null ? null : new ImagenDTO
                 {
                     IdImagen = facilidad.Imagen.IdImagen,
-                    Url = facilidad.Imagen.Url,
+                    Url = facilidad.Imagen.Ruta,
                 }
             }
             );

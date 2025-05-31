@@ -5,16 +5,17 @@ using System.Text;
 using System.Threading.Tasks;
 using Dominio.Entidades;
 using Dominio.Interfaces;
+using Infraestructura.Nucleo;
 using Infraestructura.Persistencia;
 using Microsoft.EntityFrameworkCore;
 
 namespace Infraestructura.Repositorios
 {
-    public class PublicidadRepositorio : IPublicidadRepositorio
+    public class PublicidadRepositorio : BaseRepositorio<Publicidad>, IPublicidadRepositorio
     {
         private readonly ContextoDbSQLServer _contexto;
 
-        public PublicidadRepositorio(ContextoDbSQLServer contexto)
+        public PublicidadRepositorio(ContextoDbSQLServer contexto) : base(contexto)
         {
             _contexto = contexto;
         }
@@ -25,8 +26,8 @@ namespace Infraestructura.Repositorios
             {
                 var publicidades = await this._contexto.Publicidades
                     .Include(publicidades => publicidades.Imagen)
-                    .Where(publicidad => publicidad.Imagen!.Eliminado == false)
-                    .Where(publicidad => publicidad.Activo == true)
+                    .Where(publicidad => publicidad.Imagen!.Activa == true)
+                    .Where(publicidad => publicidad.Activa == true)
                     .ToListAsync();
 
                 if (publicidades == null)

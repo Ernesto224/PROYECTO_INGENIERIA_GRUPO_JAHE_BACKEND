@@ -24,7 +24,7 @@ namespace Infraestructura.Repositorios
         public async Task<string> RealizarReserva(Reserva reserva)
         {
             var resultado = await _contexto.Reservas.AddAsync(reserva);
-            await _contexto.SaveChangesAsync();
+            //await _contexto.SaveChangesAsync();
 
             string idReserva = resultado.Entity.IdReserva.ToString();
 
@@ -40,7 +40,7 @@ namespace Infraestructura.Repositorios
                             (h.Estado != EstadoDeHabitacion.NO_DISP.ToString() && h.Estado != EstadoDeHabitacion.OCUPADA.ToString()))
                 .Where(h => !_contexto.Reservas.Any(r =>
                     r.IdHabitacion == h.IdHabitacion &&
-                    r.Activo &&
+                    r.Activa &&
                     r.Estado != EstadoDeReserva.CANCELADA.ToString() &&
                     r.FechaLlegada.Date < fechaSalida.Date && 
                     r.FechaSalida.Date > fechaLlegada.Date)) 
@@ -75,15 +75,8 @@ namespace Infraestructura.Repositorios
             }
         }
 
-        public async Task<Transaccion> RealizarTransaccion(decimal monto, string descripcion)
+        public async Task<Transaccion> RealizarTransaccion(Transaccion transaccion)
         {
-            var transaccion = new Transaccion
-            {
-                Monto = monto,
-                Descripcion = descripcion,
-                Fecha = DateTime.Now
-            };
-
             var resultado = await _contexto.Transacciones.AddAsync(transaccion);
 
             return resultado.Entity;
@@ -107,13 +100,6 @@ namespace Infraestructura.Repositorios
             return true;
         }
 
-        public Task<List<TipoDeHabitacion>> VerTiposDeHabitacion()
-        {
-            var tiposDeHabitacion = _contexto.TipoDeHabitaciones.ToListAsync();
-
-            return tiposDeHabitacion;
-        }
-
         public Task<Cliente> VerCliente(string email)
         {
             var cliente = _contexto.Clientes.FirstOrDefaultAsync(c => c.Email == email);
@@ -123,7 +109,7 @@ namespace Infraestructura.Repositorios
         public async Task<List<Oferta>> VerOfertasAplicables(int idTipoDeHabitacion, DateTime fechaLlegada, DateTime fechaSalida)
         {
             var ofertasAplicables = await _contexto.Ofertas
-                .Where(o => o.Activo &&
+                .Where(o => o.Activa &&
                    o.IdTipoDeHabitacion == idTipoDeHabitacion &&
                    !(fechaSalida < o.FechaInicio || fechaLlegada > o.FechaFinal))
                 .ToListAsync();
@@ -144,7 +130,7 @@ namespace Infraestructura.Repositorios
                                 h.Estado != EstadoDeHabitacion.OCUPADA.ToString())
                     .Where(h => !_contexto.Reservas.Any(r =>
                         r.IdHabitacion == h.IdHabitacion &&
-                        r.Activo &&
+                        r.Activa &&
                         r.Estado != EstadoDeReserva.CANCELADA.ToString() &&
                         r.FechaLlegada < fechaSalida &&
                         r.FechaSalida > fechaLlegada))
@@ -181,7 +167,7 @@ namespace Infraestructura.Repositorios
 
                         bool estaDisponible = !_contexto.Reservas.Any(r =>
                             r.IdHabitacion == h.IdHabitacion &&
-                            r.Activo &&
+                            r.Activa &&
                             r.Estado != EstadoDeReserva.CANCELADA.ToString() &&
                             r.FechaLlegada < fin &&
                             r.FechaSalida > inicio);

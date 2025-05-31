@@ -16,10 +16,9 @@ namespace Dominio.Entidades
         public int IdPublicidad { get; set; }
 
         [Required]
-        public string EnlacePublicidad { get; set; } = string.Empty;
+        public string Enlace { get; set; } = string.Empty;
 
-        [Required]
-        public bool Activo { get; set; }
+        public bool Activa { get; set; } = true;
 
         // Clave foránea
         [ForeignKey("Imagen")]

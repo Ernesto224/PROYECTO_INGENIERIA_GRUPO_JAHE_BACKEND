@@ -11,5 +11,7 @@ namespace Dominio.Interfaces
     {
         public Task<(IEnumerable<Habitacion> habitaciones, int datosTotales, int paginaActual)> ConsultarDisponibilidadDeHabitaciones(int[] idTiposHabitacion,
             DateTime fechaLlegada, DateTime fechaSalida, int numeroDePagina, int maximoDeDatos, bool irALaUltimaPagina);
+
+        public Task<(IEnumerable<Habitacion> habitaciones, int datosTotales, int paginaActual)> ConsultarDisponibilidadDeHabitacionesHoy(int numeroDePagina, int maximoDeDatos, bool irALaUltimaPagina);
     }
 }

@@ -9,8 +9,8 @@ namespace Dominio.Interfaces
 {
     public interface IAdministradorRepositorio
     {
-        public Task<(bool loginCorrecto, Administrador administradorRecuperado)> LoginAdministrador(Administrador administrador);
+        public Task<(bool loginCorrecto, Usuario administradorRecuperado)> LoginAdministrador(Usuario administrador);
 
-        public Task<Administrador> ObtenerInformacionDelAdministrador(int idAdmin);
+        public Task<Usuario> ObtenerInformacionDelAdministrador(int idAdmin);
     }
 }

@@ -38,7 +38,7 @@ namespace Aplicacion.Servicios
                 Imagen = tipo.Imagen == null ? null : new ImagenDTO
                 {
                     IdImagen = tipo.Imagen.IdImagen,
-                    Url = tipo.Imagen.Url
+                    Url = tipo.Imagen.Ruta
                 }
             });
 

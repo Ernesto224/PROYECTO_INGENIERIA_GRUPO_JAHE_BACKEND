@@ -66,8 +66,6 @@ namespace Infraestructura.Repositorios
             }
         }
 
-
-
         public async Task<IEnumerable<Habitacion>> verHabitaciones()
         {
             try

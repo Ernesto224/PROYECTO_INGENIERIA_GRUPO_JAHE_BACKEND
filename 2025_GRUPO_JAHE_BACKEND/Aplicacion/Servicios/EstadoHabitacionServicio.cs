@@ -64,7 +64,7 @@ namespace Aplicacion.Servicios
                         Imagen = h.TipoDeHabitacion.Imagen == null ? null : new ImagenDTO
                         {
                             IdImagen = h.TipoDeHabitacion.Imagen.IdImagen,
-                            Url = h.TipoDeHabitacion.Imagen.Url
+                            Url = h.TipoDeHabitacion.Imagen.Ruta
                         }
                     }
                 });
