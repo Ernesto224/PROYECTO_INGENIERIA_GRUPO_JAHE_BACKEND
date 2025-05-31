@@ -20,25 +20,34 @@ namespace Infraestructura.Repositorios
             _contexto = contexto;
         }
 
-        public async Task<SobreNosotros> CambiarImagenGaleriaSobreNosotros(SobreNosotros sobreNosotros)
+        public async Task<SobreNosotros> CambiarImagenGaleriaSobreNosotros(SobreNosotros sobreNosotros, string? imagenURL)
         {
+            Console.WriteLine("DATOS EN EL REPOSITORIO: " + sobreNosotros.ImagenesSobreNosotros.Count);
             try
             {
-                var resultado = await _contexto.SobreNosotros.Include(img => img.ImagenesSobreNosotros).ThenInclude(imagen => imagen.Imagen).FirstOrDefaultAsync();
-                if (resultado != null)
+                var resultado = await _contexto.SobreNosotros
+                    .Include(img => img.ImagenesSobreNosotros)
+                    .ThenInclude(imagen => imagen.Imagen)
+                    .FirstOrDefaultAsync();
+
+                if (resultado != null && imagenURL != null)
                 {
                     foreach (var imagen in resultado.ImagenesSobreNosotros)
                     {
-                        var imagenExistente = sobreNosotros.ImagenesSobreNosotros.FirstOrDefault(i => i.IdImagen == imagen.IdImagen);
-                        if (imagenExistente != null)
+                        if (imagen.Imagen != null) 
                         {
-                            imagen.Imagen.Ruta = imagenExistente.Imagen.Ruta;
+                            var imagenExistente = sobreNosotros.ImagenesSobreNosotros
+                                .FirstOrDefault(i => i.IdImagen == imagen.IdImagen);
+
+                            if (imagenExistente != null)
+                            {
+                                imagen.Imagen.Ruta = imagenURL;
+                            }
                         }
                     }
                     await _contexto.SaveChangesAsync();
-                    return resultado;
                 }
-                return null;
+                return resultado;
             }
             catch (InvalidOperationException ex)
             {
@@ -56,14 +65,18 @@ namespace Infraestructura.Repositorios
         {
             try
             {
-                var resultado = await this._contexto.SobreNosotros.Include(img=> img.ImagenesSobreNosotros).ThenInclude(imagen=> imagen.Imagen).FirstOrDefaultAsync();
+                var resultado = await this._contexto.SobreNosotros
+                    .Include(img => img.ImagenesSobreNosotros)
+                    .ThenInclude(imagen => imagen.Imagen)
+                    .FirstOrDefaultAsync();
+
                 if (resultado != null)
                 {
                     resultado.Descripcion = sobreNosotros.Descripcion;
                     await this._contexto.SaveChangesAsync();
                 }
-                return resultado;
 
+                return resultado;
             }
             catch (InvalidOperationException ex)
             {
@@ -76,6 +89,7 @@ namespace Infraestructura.Repositorios
                 throw new Exception("Error al actualizar los datos de SobreNosotros", ex);
             }
         }
+
         public async Task<SobreNosotros> VerDatosSobreNosotros()
         {
             try
@@ -90,6 +104,7 @@ namespace Infraestructura.Repositorios
                 if (resultado == null)
                 {
                     Console.WriteLine("Repository - No se encontraron registros de SobreNosotros");
+                    throw new Exception("No se encontraron registros de SobreNosotros");
                 }
                 return resultado;
             }

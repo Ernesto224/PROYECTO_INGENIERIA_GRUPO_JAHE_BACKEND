@@ -8,6 +8,7 @@ namespace Aplicacion.DTOs
 {
     public class SobreNosotrosDTO
     {
+        public int idSobreNosotros { get; set; }
         public string Descripcion { get; set; } = string.Empty;
         public List<ImagenDTO> Imagenes { get; set; }
     }

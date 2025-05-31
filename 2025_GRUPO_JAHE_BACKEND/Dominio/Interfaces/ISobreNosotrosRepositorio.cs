@@ -11,6 +11,6 @@ namespace Dominio.Interfaces
     {
         public Task<SobreNosotros> VerDatosSobreNosotros();
         public Task<SobreNosotros> CambiarTextoSobreNosotros(SobreNosotros sobreNosotros);
-        public Task<SobreNosotros> CambiarImagenGaleriaSobreNosotros(SobreNosotros sobreNosotros);
+        public Task<SobreNosotros> CambiarImagenGaleriaSobreNosotros(SobreNosotros sobreNosotros, string urlImagen);
     }
 }
