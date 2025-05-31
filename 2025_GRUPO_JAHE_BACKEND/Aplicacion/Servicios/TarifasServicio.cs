@@ -2,6 +2,7 @@
 using Aplicacion.Interfaces;
 using Dominio.Entidades;
 using Dominio.Interfaces;
+using Dominio.Servicios_de_Dominio;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -15,16 +16,24 @@ namespace Aplicacion.Servicios
 
         private readonly ITarifasRepositorio _tarifasRepositorio;
         private readonly IServicioAlmacenamientoImagenes _servicioAlmacenamientoImagenes;
+        private readonly ITemporadaRepositorio _temporadaRepositorio;
 
-        public TarifasServicio(ITarifasRepositorio tarifasRepositorio, IServicioAlmacenamientoImagenes servicioAlmacenamientoImagenes)
+        public TarifasServicio(ITarifasRepositorio tarifasRepositorio, IServicioAlmacenamientoImagenes servicioAlmacenamientoImagenes, ITemporadaRepositorio temporadaRepositorio)
         {
             this._tarifasRepositorio = tarifasRepositorio;
             this._servicioAlmacenamientoImagenes = servicioAlmacenamientoImagenes;
+            this._temporadaRepositorio = temporadaRepositorio;
         }
 
         public async Task<IEnumerable<TipoDeHabitacionDTO>> verTarifas()
         {
             var tarifas = await this._tarifasRepositorio.verTarifas();
+
+            DateTime fechaActual = DateTime.Now;
+
+            var temporada = await this._temporadaRepositorio.ObtenerTemporadaPorFecha(fechaActual, fechaActual);
+
+            CalcularPrecioService calculator = new CalcularPrecioService();
 
             if (tarifas == null || !tarifas.Any())
                 throw new Exception("No se encontraron datos.");
@@ -34,7 +43,8 @@ namespace Aplicacion.Servicios
                 IdTipoDeHabitacion = tipo.IdTipoDeHabitacion,
                 Nombre = tipo.Nombre,
                 Descripcion = tipo.Descripcion,
-                TarifaDiaria = tipo.TarifaDiaria,
+                //TarifaDiaria = tipo.TarifaDiaria,
+                TarifaDiaria = calculator.AplicarTemporada(tipo.TarifaDiaria, temporada),
                 Imagen = tipo.Imagen == null ? null : new ImagenDTO
                 {
                     IdImagen = tipo.Imagen.IdImagen,

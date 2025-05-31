@@ -146,7 +146,16 @@ namespace Aplicacion.Servicios
                 return null;
             }
 
+            var precioHabitacion = habitacion.TipoDeHabitacion.TarifaDiaria;
 
+            var temporada = await _repositorioTemporada.ObtenerTemporadaPorFecha(reservaDTO.FechaLlegada, reservaDTO.FechaSalida);
+
+            if(temporada != null)
+            {
+                var calculador = new CalcularPrecioService();
+                precioHabitacion = calculador.AplicarTemporada(habitacion.TipoDeHabitacion.TarifaDiaria, temporada);
+                Console.WriteLine("SE APLICO LA TEMPORADA " + precioHabitacion);
+            }
 
             return new HabitacionDTO
             {
@@ -157,7 +166,7 @@ namespace Aplicacion.Servicios
                 {
                     IdTipoDeHabitacion = habitacion.TipoDeHabitacion.IdTipoDeHabitacion,
                     Nombre = habitacion.TipoDeHabitacion.Nombre,
-                    TarifaDiaria = habitacion.TipoDeHabitacion.TarifaDiaria 
+                    TarifaDiaria = precioHabitacion
                 },
             };
         }
