@@ -23,18 +23,13 @@ namespace Aplicacion.Servicios
 
         public async Task<SobreNosotrosDTO> CambiarImagenGaleriaSobreNosotros(SobreNosotrosModificarDTO galeriaModificarDTO)
         {
-            Console.WriteLine("DATOS EN EL SERVICIO: " + galeriaModificarDTO.IdSobreNosotros + " ID_Imagen " + galeriaModificarDTO.IdImagen + " Nombre Archivo: " + galeriaModificarDTO.Imagen + " " + galeriaModificarDTO.NombreArchivo);
-            // Si el atributo Imagen es nulo, no se sube una nueva imagen.  
             string? urlImagen = null;
 
             if (galeriaModificarDTO.Imagen != null)
             {
-                // Se sube la imagen y obtenemos la URL  
                 urlImagen = await this._servicioAlmacenamientoImagenes
                     .SubirImagen(galeriaModificarDTO.Imagen, galeriaModificarDTO.NombreArchivo);
             }
-            Console.WriteLine("NUEVA URL EN EL SERVICIO: " +urlImagen);
-
             var sobreNosotroActualizado = await _sobreNosotrosRepositorio.CambiarImagenGaleriaSobreNosotros(new SobreNosotros
             {
                 IdSobreNosotros = galeriaModificarDTO.IdSobreNosotros,

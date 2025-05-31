@@ -22,7 +22,6 @@ namespace Infraestructura.Repositorios
 
         public async Task<SobreNosotros> CambiarImagenGaleriaSobreNosotros(SobreNosotros sobreNosotros, string? imagenURL)
         {
-            Console.WriteLine("DATOS EN EL REPOSITORIO: " + sobreNosotros.ImagenesSobreNosotros.Count);
             try
             {
                 var resultado = await _contexto.SobreNosotros
@@ -37,7 +36,7 @@ namespace Infraestructura.Repositorios
                         if (imagen.Imagen != null) 
                         {
                             var imagenExistente = sobreNosotros.ImagenesSobreNosotros
-                                .FirstOrDefault(i => i.IdImagen == imagen.IdImagen);
+                                .FirstOrDefault(img => img.IdImagen == imagen.IdImagen);
 
                             if (imagenExistente != null)
                             {
@@ -51,12 +50,10 @@ namespace Infraestructura.Repositorios
             }
             catch (InvalidOperationException ex)
             {
-                Console.WriteLine($"Repository - Error de operación inválida: {ex.Message}");
                 throw new Exception("Error en la consulta a la base de datos", ex);
             }
             catch (Exception ex)
             {
-                Console.WriteLine($"Repository - Error inesperado: {ex.Message}");
                 throw new Exception("Error al actualizar los datos de SobreNosotros", ex);
             }
         }
@@ -80,12 +77,10 @@ namespace Infraestructura.Repositorios
             }
             catch (InvalidOperationException ex)
             {
-                Console.WriteLine($"Repository - Error de operación inválida: {ex.Message}");
                 throw new Exception("Error en la consulta a la base de datos", ex);
             }
             catch (Exception ex)
             {
-                Console.WriteLine($"Repository - Error inesperado: {ex.Message}");
                 throw new Exception("Error al actualizar los datos de SobreNosotros", ex);
             }
         }
@@ -94,8 +89,6 @@ namespace Infraestructura.Repositorios
         {
             try
             {
-                Console.WriteLine("Repository - Obteniendo datos de SobreNosotros");
-
                 var resultado = await _contexto.SobreNosotros
                     .Include(sn => sn.ImagenesSobreNosotros)
                     .ThenInclude(isn => isn.Imagen)
@@ -103,19 +96,16 @@ namespace Infraestructura.Repositorios
 
                 if (resultado == null)
                 {
-                    Console.WriteLine("Repository - No se encontraron registros de SobreNosotros");
                     throw new Exception("No se encontraron registros de SobreNosotros");
                 }
                 return resultado;
             }
             catch (InvalidOperationException ex)
             {
-                Console.WriteLine($"Repository - Error de operación inválida: {ex.Message}");
                 throw new Exception("Error en la consulta a la base de datos", ex);
             }
             catch (Exception ex)
             {
-                Console.WriteLine($"Repository - Error inesperado: {ex.Message}");
                 throw new Exception("Error al obtener los datos de SobreNosotros", ex);
             }
         }
