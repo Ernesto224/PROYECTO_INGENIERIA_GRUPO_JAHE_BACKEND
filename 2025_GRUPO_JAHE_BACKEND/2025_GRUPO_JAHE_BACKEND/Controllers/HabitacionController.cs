@@ -38,5 +38,25 @@ namespace _2025_GRUPO_JAHE_BACKEND.Controllers
                 return NotFound(ex.Message);
             }
         }
+
+        //[Authorize]
+        [HttpPost("ConsultaHabitacionesHoy")]
+        public async Task<ActionResult<RespuestaConsultaDTO<HabitacionConEstadoDTO>>> GetHabitacionesHoy(ConsultaPaginadaBaseDTO parametros)
+        {
+            try
+            {
+                var resultadoConsultaDTO = await this._habitacionServicio.ConsultarDisponibilidadDeHabitacionesHoy(parametros.NumeroDePagina, parametros.MaximoDeDatos, parametros.IrALaUltimaPagina);
+
+                if (resultadoConsultaDTO == null)
+                    return NotFound("No se encontraron datos.");
+
+                return Ok(resultadoConsultaDTO);
+            }
+            catch (Exception ex)
+            {
+                return NotFound(ex.Message);
+            }
+        }
+
     }
 }
