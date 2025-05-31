@@ -32,7 +32,8 @@ namespace _2025_GRUPO_JAHE_BACKEND.Controllers
         [HttpPut]
         public async Task<ActionResult<SobreNosotrosDTO>> CambiarTextoSobreNosotros(SobreNosotrosDTO sobreNosotrosDTO)
         {
-            try {
+            try
+            {
                 var sobreNosotrosActualizado = await _sobreNosotrosServicio.CambiarTextoSobreNosotros(sobreNosotrosDTO);
                 if (sobreNosotrosActualizado != null)
                 {
@@ -62,5 +63,6 @@ namespace _2025_GRUPO_JAHE_BACKEND.Controllers
                 return BadRequest("Hubo un error en el servicio");
             }
 
+        }
     }
 }
