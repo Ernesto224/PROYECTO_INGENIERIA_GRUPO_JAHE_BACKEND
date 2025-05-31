@@ -39,6 +39,7 @@ namespace Infraestructura.ServiciosExternos
                 // Verificar si la carga fue exitosa
                 if (uploadResult.Error != null)
                 {
+                    Console.WriteLine($"Error al subir la imagen ANTES DEL CATCH: {uploadResult.Error.Message}");
                     throw new Exception($"Error al subir la imagen: {uploadResult.Error.Message}");
                 }
 
@@ -47,6 +48,7 @@ namespace Infraestructura.ServiciosExternos
             }
             catch (Exception ex)
             {
+                Console.WriteLine($"Error al subir la imagen a Cloudinary: {ex.Message}");
                 throw new Exception(ex.Message);
             }
         }
