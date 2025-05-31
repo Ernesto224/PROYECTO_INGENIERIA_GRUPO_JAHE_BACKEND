@@ -48,5 +48,33 @@ namespace Aplicacion.Servicios
             };
 
         }
+
+        public async Task<RespuestaConsultaDTO<HabitacionConEstadoDTO>> ConsultarDisponibilidadDeHabitacionesHoy(int numeroDePagina, int maximoDeDatos, bool irALaUltimaPagina)
+        {
+            var resultado = await this._habitacionRepositorio.ConsultarDisponibilidadDeHabitacionesHoy(numeroDePagina, maximoDeDatos, irALaUltimaPagina);
+
+            if (resultado.habitaciones == null)
+                throw new Exception("No se encontraron datos.");
+
+            return new RespuestaConsultaDTO<HabitacionConEstadoDTO>
+            {
+                Lista = resultado.habitaciones.Select(h => new HabitacionConEstadoDTO
+                {
+                    IdHabitacion = h.IdHabitacion,
+                    Numero = h.Numero,
+                    Estado = h.Estado,
+                    TipoDeHabitacion = new TipoDeHabitacionConsultaDTO
+                    {
+                        IdTipoDeHabitacion = h.TipoDeHabitacion.IdTipoDeHabitacion,
+                        Nombre = h.TipoDeHabitacion.Nombre,
+                        TarifaDiaria = h.TipoDeHabitacion.TarifaDiaria,
+                    }
+                }
+                ),
+                TotalRegistros = resultado.datosTotales,
+                PaginaActual = resultado.paginaActual,
+                MaximoPorPagina = maximoDeDatos
+            };
+        }
     }
 }
