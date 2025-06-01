@@ -11,5 +11,9 @@ namespace Dominio.Interfaces
     public interface IPublicidadRepositorio : IBaseRepositorio<Publicidad>
     {
         public Task<List<Publicidad>> VerPublicidadesActivas();
+
+        public Task<Publicidad> VerPubliciadadPorId(int idPublicidad);
+
+       
     }
 }

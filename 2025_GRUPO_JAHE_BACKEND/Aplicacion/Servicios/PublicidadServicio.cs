@@ -14,9 +14,15 @@ namespace Aplicacion.Servicios
     {
         private readonly IPublicidadRepositorio _repositorio;
 
-        public PublicidadServicio(IPublicidadRepositorio repositorio)
+        private readonly ITransactionMethods _unitOfWork;
+
+        private readonly IServicioAlmacenamientoImagenes _servicioAlmacenamientoImagenes;
+
+        public PublicidadServicio(IPublicidadRepositorio repositorio, ITransactionMethods unitOfWork, IServicioAlmacenamientoImagenes servicioAlmacenamientoImagenes)
         {
             _repositorio = repositorio;
+            _unitOfWork = unitOfWork;
+            _servicioAlmacenamientoImagenes = servicioAlmacenamientoImagenes;
         }
 
         public async Task<List<PublicidadDTO>> VerPublicidadesActivas()
@@ -38,5 +44,40 @@ namespace Aplicacion.Servicios
                 }
             }).ToList();
         }
+
+
+        public async Task<RespuestaDTO<PublicidadDTO>> EliminarPublicidad(int idOferta)
+        {
+            try
+            {
+                var oferta = await this._repositorio.VerPubliciadadPorId(idOferta);
+
+                await this._repositorio.DeleteAsync(oferta);
+
+                var resultado = await this._unitOfWork.SaveChangesAsync();
+
+
+                return new RespuestaDTO<PublicidadDTO>
+                {
+                    Texto = "Eliminada correctamente",
+                    EsCorrecto = true,
+                    Objeto = null
+                };
+
+            }
+            catch (Exception ex)
+            {
+                return new RespuestaDTO<PublicidadDTO>
+                {
+                    Texto = $"Error eliminando oferta: {ex.Message}",
+                    EsCorrecto = false,
+                    Objeto = null
+                };
+            }
+
+        }
+
+
+
     }
 }
