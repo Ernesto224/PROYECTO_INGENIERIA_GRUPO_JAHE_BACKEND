@@ -42,8 +42,8 @@ namespace Infraestructura.Repositorios
                     r.IdHabitacion == h.IdHabitacion &&
                     r.Activa &&
                     r.Estado != EstadoDeReserva.CANCELADA.ToString() &&
-                    r.FechaLlegada.Date < fechaSalida.Date && 
-                    r.FechaSalida.Date > fechaLlegada.Date)) 
+                    r.FechaLlegada.Date < fechaSalida.Date &&
+                    r.FechaSalida.Date > fechaLlegada.Date))
                 .FirstOrDefaultAsync();
 
             if (HabitacionDisponible == null)
@@ -135,7 +135,8 @@ namespace Infraestructura.Repositorios
                         r.FechaLlegada < fechaSalida &&
                         r.FechaSalida > fechaLlegada))
                     .Take(3)
-                    .Select(h => new {
+                    .Select(h => new
+                    {
                         Tipo = h.TipoDeHabitacion,
                         Inicio = fechaLlegada,
                         Fin = fechaSalida
@@ -189,6 +190,64 @@ namespace Infraestructura.Repositorios
             catch (Exception ex)
             {
                 throw new Exception(ex.Message);
+            }
+        }
+
+        public async Task<(IEnumerable<Reserva> reservas, int totalRegistros, int paginaActual)> ListarReservaciones(int numeroDePagina, int maximoDeDatos, bool irALaUltimaPagina)
+        {
+            var query = _contexto.Reservas
+                .Where(r => r.Activa)
+                .Include(r => r.Cliente)
+                .Include(r => r.Habitacion).ThenInclude(h => h.TipoDeHabitacion)
+                .Include(r => r.Transaccion);
+
+            int totalRegistros = await query.CountAsync();
+            int totalPaginas = (int)Math.Ceiling((double)totalRegistros / maximoDeDatos);
+            int paginaActual = irALaUltimaPagina ? (totalPaginas == 0 ? 1 : totalPaginas) : numeroDePagina;
+
+            var resultado = await query
+                .Skip((paginaActual - 1) * maximoDeDatos)
+                .Take(maximoDeDatos)
+                .ToListAsync();
+
+            return (resultado, totalRegistros, paginaActual);
+        }
+
+        public async Task<bool> EliminarReserva(string idReserva)
+        {
+            if (!Guid.TryParse(idReserva, out var guidReserva))
+                throw new ArgumentException("El ID de reserva proporcionado no es válido.");
+
+            var reserva = await _contexto.Reservas.FindAsync(guidReserva);
+            if (reserva == null)
+                throw new KeyNotFoundException($"No se encontró ninguna reserva con el ID {idReserva}.");
+
+            reserva.Activa = false;
+            var filasAfectadas = await _contexto.SaveChangesAsync();
+            return filasAfectadas > 0;
+        }
+
+        public async Task<Reserva> DetalleReservacion(string idReserva)
+        {
+            try
+            {
+                if (string.IsNullOrWhiteSpace(idReserva))
+                    throw new ArgumentException("El idReserva no puede estar vacío.", nameof(idReserva));
+
+                if (!Guid.TryParse(idReserva, out Guid guidReserva))
+                    throw new ArgumentException("El idReserva no tiene un formato válido de Guid.", nameof(idReserva));
+
+                var reserva = await _contexto.Reservas
+                    .Include(r => r.Cliente)
+                    .Include(r => r.Habitacion).ThenInclude(h => h.TipoDeHabitacion)
+                    .Include(r => r.Transaccion)
+                    .FirstOrDefaultAsync(r => r.IdReserva == guidReserva && r.Activa);
+
+                return reserva;
+            }
+            catch (Exception)
+            {
+                return null;
             }
         }
 

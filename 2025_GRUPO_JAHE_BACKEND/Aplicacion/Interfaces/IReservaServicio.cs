@@ -18,6 +18,8 @@ namespace Aplicacion.Interfaces
         public Task<IEnumerable<AlternativaDeReservaDTO>> VerAlternativasDisponibles(ReservaDTO reservaDTO);
 
         public Task<bool> CambiarEstadoHabitacion(int idHabitacion, string estadoNuevo);
-
+        public Task<RespuestaConsultaDTO<DatoReservaDTO>> ListarReservaciones(int numeroDePagina, int maximoDeDatos, bool irALaUltimaPagina);
+        public Task<bool> EliminarReserva(string idReserva);
+        public Task<DatoReservaDTO> DetalleReservacion(string idReserva);
     }
 }

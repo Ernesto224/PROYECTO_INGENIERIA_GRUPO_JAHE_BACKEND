@@ -24,6 +24,8 @@ namespace Dominio.Interfaces
         public Task<Cliente> VerCliente(string email);
 
         public Task<List<Oferta>> VerOfertasAplicables(int idTipoDeHabitacion, DateTime fechaLlegada, DateTime fechaSalida);
-
+        public Task<(IEnumerable<Reserva> reservas, int totalRegistros, int paginaActual)> ListarReservaciones(int numeroDePagina, int maximoDeDatos, bool irALaUltimaPagina);
+        public Task<bool> EliminarReserva(string idReserva);
+        public Task<Reserva> DetalleReservacion(string idReserva);
     }
 }
