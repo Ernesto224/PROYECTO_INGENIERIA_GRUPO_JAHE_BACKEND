@@ -9,6 +9,7 @@ using Dominio.Entidades;
 using Dominio.Enumeraciones;
 using Dominio.Interfaces;
 using Dominio.Servicios_de_Dominio;
+using static System.Runtime.InteropServices.JavaScript.JSType;
 
 namespace Aplicacion.Servicios
 {
@@ -250,6 +251,62 @@ namespace Aplicacion.Servicios
             mensajeEmail.AppendLine("<p><strong>Equipo de Reservas<br/>Hotel Jade</strong></p>");
 
             await this._servicioEmail.enviarEmail(clienteDTO.Email, asuntoEmail, mensajeEmail.ToString());
+        }
+        public async Task<RespuestaConsultaDTO<DatoReservaDTO>> ListarReservaciones(int numeroDePagina, int maximoDeDatos, bool irALaUltimaPagina)
+        {
+            var resultado = await _repositorioReserva.ListarReservaciones(numeroDePagina, maximoDeDatos, irALaUltimaPagina);
+
+            return new RespuestaConsultaDTO<DatoReservaDTO>
+            {
+                Lista = resultado.reservas.Select(item => new DatoReservaDTO
+                {
+                    Fecha = DateTime.Now,
+                    IdReserva = item.IdReserva,
+                    Nombre = item.Cliente?.Nombre,
+                    Apellidos = item.Cliente?.Apellidos,
+                    Email = item.Cliente?.Email,
+                    Tarjeta = item.Cliente?.TarjetaDePago,
+                    Transaccion = item.Transaccion?.Descripcion,
+                    FechaLlegada = item.FechaLlegada,
+                    FechaSalida = item.FechaSalida,
+                    Tipo = item.Habitacion?.TipoDeHabitacion?.Nombre
+                }),
+                TotalRegistros = resultado.totalRegistros,
+                PaginaActual = resultado.paginaActual,
+                MaximoPorPagina = maximoDeDatos
+            };
+        }
+
+        public async Task<bool> EliminarReserva(string idReserva)
+        {
+            var resultado = await _repositorioReserva.EliminarReserva(idReserva);
+
+            if (!resultado)
+                throw new InvalidOperationException("No se pudo eliminar la reserva.");
+
+            return resultado;
+        }
+
+        public async Task<DatoReservaDTO> DetalleReservacion(string idReserva)
+        {
+            var resultado = await _repositorioReserva.DetalleReservacion(idReserva);
+            if (resultado != null)
+            {
+                return new DatoReservaDTO
+                {
+                    Fecha = DateTime.Now,
+                    IdReserva = resultado.IdReserva,
+                    Nombre = resultado.Cliente?.Nombre,
+                    Apellidos = resultado.Cliente?.Apellidos,
+                    Email = resultado.Cliente?.Email,
+                    Tarjeta = resultado.Cliente?.TarjetaDePago,
+                    Transaccion = resultado.Transaccion?.Descripcion,
+                    FechaLlegada = resultado.FechaLlegada,
+                    FechaSalida = resultado.FechaSalida,
+                    Tipo = resultado.Habitacion?.TipoDeHabitacion?.Nombre
+                };
+            }
+            return null;
         }
     }
 }
