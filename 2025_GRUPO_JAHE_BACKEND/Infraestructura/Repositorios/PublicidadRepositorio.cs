@@ -60,11 +60,7 @@ namespace Infraestructura.Repositorios
 
         public override async Task CrearAsync(Publicidad publicidad)
         {
-            if (publicidad == null)
-                throw new ArgumentNullException(nameof(publicidad));
-
-            await _contexto.Publicidades.AddAsync(publicidad);
-            await _contexto.SaveChangesAsync();
+           await base.CrearAsync(publicidad);
         }
 
     }

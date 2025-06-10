@@ -13,5 +13,6 @@ namespace Aplicacion.Interfaces
 
         public Task<RespuestaDTO<PublicidadDTO>> EliminarPublicidad(int idOferta);
 
+        public Task<RespuestaDTO<PublicidadDTO>> CrearPublicidad(PublicidadCrearDTO publicidadCrearDTO);
     }
 }

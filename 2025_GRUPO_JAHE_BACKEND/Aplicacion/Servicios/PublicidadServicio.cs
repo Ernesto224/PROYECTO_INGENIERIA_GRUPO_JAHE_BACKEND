@@ -45,7 +45,6 @@ namespace Aplicacion.Servicios
             }).ToList();
         }
 
-
         public async Task<RespuestaDTO<PublicidadDTO>> EliminarPublicidad(int idOferta)
         {
             try
@@ -74,10 +73,60 @@ namespace Aplicacion.Servicios
                     Objeto = null
                 };
             }
-
         }
 
+        public async Task<RespuestaDTO<PublicidadDTO>> CrearPublicidad(PublicidadCrearDTO publicidadCrearDTO)
+        {
+            try
+            {
+                // Si el atributo Imagen es nulo, no se sube una nueva imagen.
+                string? urlImagen = null;
 
+                if (publicidadCrearDTO.Imagen != null)
+                {
+                    // Se sube la imagen y obtenemos la URL
+                    urlImagen = await this._servicioAlmacenamientoImagenes
+                        .SubirImagen(publicidadCrearDTO.Imagen, publicidadCrearDTO.NombreArchivo);
+                }
+                else
+                {                     
+                    // Si no se proporciona una imagen, se lanza una excepción
+                    throw new Exception("La imagen es obligatoria para crear una publicidad.");
+                }
 
+                // Se crea el objeto de la entidad a crear
+                var publicidad = new Publicidad
+                {
+                    Enlace = publicidadCrearDTO.EnlacePublicidad,
+                    Imagen = new Imagen
+                    {
+                        Ruta = urlImagen
+                    }
+                };
+
+                // Se guarda la publicidad en el repositorio
+                await this._repositorio.CrearAsync(publicidad);
+
+                // Se guardan los cambios en la base de datos
+                var resultado = await this._unitOfWork.SaveChangesAsync();
+
+                return new RespuestaDTO<PublicidadDTO>
+                {
+                    Texto = "Publicidad creada correctamente",
+                    EsCorrecto = true,
+                    Objeto = null
+                };
+
+            }
+            catch (Exception ex)
+            {
+                return new RespuestaDTO<PublicidadDTO>
+                {
+                    Texto = $"Error creando publicidad: {ex.Message}",
+                    EsCorrecto = false,
+                    Objeto = null
+                };
+            }
+        }
     }
 }

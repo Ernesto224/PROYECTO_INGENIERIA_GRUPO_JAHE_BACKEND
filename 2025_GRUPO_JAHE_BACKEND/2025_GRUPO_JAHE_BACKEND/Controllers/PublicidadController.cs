@@ -35,8 +35,6 @@ namespace _2025_GRUPO_JAHE_BACKEND.Controllers
             }
         }
 
-
-
         [HttpDelete("{idPublicidad}")]
         public async Task<ActionResult<RespuestaDTO<PublicidadDTO>>> Delete(int idPublicidad)
         {
@@ -47,6 +45,24 @@ namespace _2025_GRUPO_JAHE_BACKEND.Controllers
                 if (respuesta == null)
                 {
                     return NotFound("No se pudo eliminar la publicidad.");
+                }
+                return Ok(respuesta);
+            }
+            catch (Exception ex)
+            {
+                return NotFound(ex.Message);
+            }
+        }
+
+        [HttpPost]
+        public async Task<ActionResult<RespuestaDTO<PublicidadDTO>>> Post(PublicidadCrearDTO publicidadCrearDTO)
+        {
+            try
+            {
+                RespuestaDTO<PublicidadDTO> respuesta = await this._publicidadServicio.CrearPublicidad(publicidadCrearDTO);
+                if (respuesta == null)
+                {
+                    return NotFound("No se pudo crear la publicidad.");
                 }
                 return Ok(respuesta);
             }
