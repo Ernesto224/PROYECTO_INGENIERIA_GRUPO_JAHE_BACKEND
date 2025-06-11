@@ -10,7 +10,7 @@ namespace Aplicacion.DTOs
     {
         public int IdHome { get; set; }
         public string Descripcion { get; set; } = string.Empty;
-        public required byte[] Imagen { get; set; }
+        public byte[]? Imagen { get; set; }
         public string NombreArchivo { get; set; } = string.Empty;
     }
 }
