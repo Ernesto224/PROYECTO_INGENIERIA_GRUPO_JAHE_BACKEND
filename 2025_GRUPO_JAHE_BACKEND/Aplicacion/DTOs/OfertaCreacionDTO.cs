@@ -6,10 +6,9 @@ using System.Threading.Tasks;
 
 namespace Aplicacion.DTOs
 {
-    public class HomeModificarDTO
+    public class OfertaCreacionDTO
     {
-        public int IdHome { get; set; }
-        public string Descripcion { get; set; } = string.Empty;
+        public OfertaDTO ofertaDTO { get; set; }
         public byte[]? Imagen { get; set; }
         public string NombreArchivo { get; set; } = string.Empty;
     }

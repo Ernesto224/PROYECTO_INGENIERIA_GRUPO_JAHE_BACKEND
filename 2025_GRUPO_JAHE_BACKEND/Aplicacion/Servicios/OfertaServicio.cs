@@ -25,25 +25,40 @@ namespace Aplicacion.Servicios
             _servicioAlmacenamientoImagenes = servicioAlmacenamientoImagenes;
         }
 
-        public async Task<RespuestaDTO<OfertaDTO>> CrearOferta(OfertaDTO ofertaDTO)
+        public async Task<RespuestaDTO<OfertaDTO>> CrearOferta(OfertaCreacionDTO ofertaCreacionDTO)
         {
             try
             {
+                var ofertaDTO = ofertaCreacionDTO.ofertaDTO;
+
                 var oferta = new Oferta()
                 {
-                    IdOferta = ofertaDTO.IdOferta,
                     Nombre = ofertaDTO.Nombre,
                     FechaInicio = ofertaDTO.FechaInicio,
                     FechaFinal = ofertaDTO.FechaFinal,
                     Porcentaje = ofertaDTO.Porcentaje,
                     Activa = true,
-                    IdTipoDeHabitacion = ofertaDTO.TipoDeHabitacion.IdTipoDeHabitacion,
-                    IdImagen = ofertaDTO.Imagen.IdImagen
+                    IdTipoDeHabitacion = ofertaDTO.TipoDeHabitacion.IdTipoDeHabitacion
                 };
 
-                await this._ofertaRepositorio.CrearAsync(oferta);
+                if (ofertaCreacionDTO.Imagen != null)
+                {
+                    string urlImagen = await _servicioAlmacenamientoImagenes.SubirImagen(
+                        ofertaCreacionDTO.Imagen,
+                        ofertaCreacionDTO.NombreArchivo);
 
-                await this._unitOfWork.SaveChangesAsync();
+                    oferta.Imagen = new Imagen
+                    {
+                        Ruta = urlImagen
+                    };
+                }
+                else if (ofertaDTO.Imagen != null)
+                {
+                    oferta.IdImagen = ofertaDTO.Imagen.IdImagen;
+                }
+
+                await _ofertaRepositorio.CrearAsync(oferta);
+                await _unitOfWork.SaveChangesAsync();
 
                 return new RespuestaDTO<OfertaDTO>
                 {

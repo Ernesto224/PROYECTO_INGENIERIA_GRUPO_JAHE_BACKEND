@@ -10,6 +10,6 @@ namespace Dominio.Interfaces
     public interface IHomeRepositorio
     {
         public Task<Home> VerDatosDeHome();
-        public Task<object> ModificarDatosDeHome(Home home);
+        public Task<bool> ModificarDatosDeHome(Home home);
     }
 }

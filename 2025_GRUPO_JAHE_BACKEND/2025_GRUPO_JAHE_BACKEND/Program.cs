@@ -58,6 +58,7 @@ builder.Services.AddScoped<IAutenticacionServicio, AutenticacionServicio>();
 builder.Services.AddScoped<IOfertaRepositorio, OfertaRepositorio>();
 builder.Services.AddScoped<IOfertaServicio, OfertaServicio>();
 builder.Services.AddScoped<ITemporadaRepositorio, TemporadaRepositorio>();
+builder.Services.AddScoped<ITemporadaServicio, TemporadaServicio>();
 
 
 

@@ -19,32 +19,24 @@ namespace Infraestructura.Repositorios
             this._contexto = contexto;
         }
 
-        public async Task<object> ModificarDatosDeHome(Home home)
+        public async Task<bool> ModificarDatosDeHome(Home home)
         {
             try
             {
-                // Buscar datos
-                var homeDb = await this._contexto.Homes
-                    .Include(home => home.Imagen)
-                    .FirstOrDefaultAsync<Home>(homeDb => homeDb.IdHome == home.IdHome);
 
-                // Verificar si existen datos
-                if (homeDb == null) throw new Exception("No se encontraron datos.");
+                var homeDb = await this.VerDatosDeHome();
 
-                // Actualizar datos
+                if (homeDb == null)
+                        throw new Exception("No se encontraron datos.");
+
                 homeDb.Descripcion = home.Descripcion;
                 homeDb.Imagen!.Ruta = home.Imagen!.Ruta;
 
-                // Guardar cambios
-                var resultado = await _contexto.SaveChangesAsync();
-
-                // Retornar mensaje
-                return resultado > 0 ? new { tipo = "Ok", mensaje = "Datos modificados correctamente." } 
-                    : new { tipo = "Error", mensaje = "No se pudieron modificar los datos." };
+                return await _contexto.SaveChangesAsync() > 0;
             }
-            catch (Exception ex)
+            catch (Exception)
             {
-                return ("Error", ex.Message);
+                throw;
             }
         }
 

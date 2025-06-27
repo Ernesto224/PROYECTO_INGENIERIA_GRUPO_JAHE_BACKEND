@@ -21,29 +21,40 @@ namespace Aplicacion.Servicios
             this._servicioAlmacenamientoImagenes = servicioAlmacenamientoImagenes;
         }
 
-        public async Task<object> ModificarDatosDeHome(HomeModificarDTO homeModificarDTO)
+        public async Task<RespuestaDTO<HomeDTO>> ModificarDatosDeHome(HomeModificarDTO homeModificarDTO)
         {
             try
             {
-                // Se sube la imagen al servicio de almacenamiento de imágenes
-                var urlImagen = await this._servicioAlmacenamientoImagenes
-                    .SubirImagen(homeModificarDTO.Imagen, homeModificarDTO.NombreArchivo);
 
-                var home = new Home
+                Home home = await this._homeRepositorio.VerDatosDeHome();
+
+                home.Descripcion = homeModificarDTO.Descripcion;
+
+                if (homeModificarDTO.Imagen != null)
                 {
-                    IdHome = homeModificarDTO.IdHome,
-                    Descripcion = homeModificarDTO.Descripcion,
-                    Imagen = new Imagen
-                    {
-                        Ruta = urlImagen,
-                    }
-                };
+                    var urlImagen = await this._servicioAlmacenamientoImagenes
+                        .SubirImagen(homeModificarDTO.Imagen, homeModificarDTO.NombreArchivo);
+                    home.Imagen.Ruta = urlImagen;
 
-                return await this._homeRepositorio.ModificarDatosDeHome(home);
+                }
+
+                await this._homeRepositorio.ModificarDatosDeHome(home);
+
+                return new RespuestaDTO<HomeDTO>
+                {
+                    EsCorrecto = true,
+                    Objeto = await this.VerDatosDeHome(),
+                    Texto = "Datos del home actualizados correctamente"
+                };
             }
             catch (Exception ex)
             {
-                return ("Error", ex.Message);
+                return new RespuestaDTO<HomeDTO>()
+                {
+                    EsCorrecto = false,
+                    Objeto = null,
+                    Texto = ex.Message
+                };
             }
         }
 

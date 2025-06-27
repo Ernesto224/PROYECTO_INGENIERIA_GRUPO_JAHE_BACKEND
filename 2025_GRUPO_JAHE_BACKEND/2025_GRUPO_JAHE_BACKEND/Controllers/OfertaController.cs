@@ -50,11 +50,11 @@ namespace _2025_GRUPO_JAHE_BACKEND.Controllers
         }
 
         [HttpPost]
-        public async Task<ActionResult<OfertaDTO>> Post([FromBody] OfertaDTO ofertaDTO)
+        public async Task<ActionResult<OfertaDTO>> Post(OfertaCreacionDTO ofertaCreacionDTO)
         {
             try
             {
-                RespuestaDTO<OfertaDTO> respuesta = await this._ofertaServicio.CrearOferta(ofertaDTO);
+                RespuestaDTO<OfertaDTO> respuesta = await this._ofertaServicio.CrearOferta(ofertaCreacionDTO);
 
                 if (respuesta == null)
                 {

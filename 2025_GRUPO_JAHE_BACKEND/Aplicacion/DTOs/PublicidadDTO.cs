@@ -15,7 +15,7 @@ namespace Aplicacion.DTOs
 
         public string EnlacePublicidad { get; set; } = string.Empty;
 
-        public bool Activo { get; set; }
+        public bool Activo { get; set; } = true;
 
         public ImagenDTO? Imagen { get; set; }
     }

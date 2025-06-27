@@ -10,5 +10,9 @@ namespace Dominio.Interfaces
     public interface ITemporadaRepositorio
     {
         Task<Temporada> ObtenerTemporadaPorFecha(DateTime fechaInicio, DateTime fechaFinal);
+
+        Task<Temporada> ObtenerTemporadaAlta();
+
+        Task<Temporada> ModificarTemporada(Temporada temporada);
     }
 }

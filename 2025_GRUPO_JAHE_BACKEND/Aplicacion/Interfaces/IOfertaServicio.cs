@@ -11,7 +11,7 @@ namespace Aplicacion.Interfaces
     public interface IOfertaServicio
     {
 
-        public Task<RespuestaDTO<OfertaDTO>> CrearOferta(OfertaDTO ofertaDTO);
+        public Task<RespuestaDTO<OfertaDTO>> CrearOferta(OfertaCreacionDTO ofertaCreacionDTO);
 
         public Task<RespuestaConsultaDTO<OfertaDTO>> VerOfertas(int NumeroDePagina, int MaximoDeDatos, bool IrALaUltimaPagina);
 

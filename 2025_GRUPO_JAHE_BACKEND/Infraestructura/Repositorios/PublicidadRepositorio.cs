@@ -20,6 +20,13 @@ namespace Infraestructura.Repositorios
             _contexto = contexto;
         }
 
+        public override async Task DeleteAsync(Publicidad publicidad)
+        {
+            publicidad.Activa = !publicidad.Activa;
+
+            await base.UpdateAsync(publicidad);
+        }
+
         public async Task<List<Publicidad>> VerPublicidadesActivas()
         {
             try
@@ -40,5 +47,21 @@ namespace Infraestructura.Repositorios
                 throw new Exception(ex.Message);
             }
         }
+
+
+        public async Task<Publicidad> VerPubliciadadPorId(int idPublicidad)
+        {
+            var publiciadad = await _contexto.Publicidades
+                .FirstOrDefaultAsync(o => o.IdPublicidad == idPublicidad);
+
+            return publiciadad;
+        }
+
+
+        public override async Task CrearAsync(Publicidad publicidad)
+        {
+           await base.CrearAsync(publicidad);
+        }
+
     }
 }

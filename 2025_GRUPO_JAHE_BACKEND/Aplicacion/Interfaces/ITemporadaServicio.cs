@@ -7,9 +7,11 @@ using System.Threading.Tasks;
 
 namespace Aplicacion.Interfaces
 {
-    public interface IHomeServicio
+    public interface ITemporadaServicio
     {
-        public Task<HomeDTO> VerDatosDeHome();
-        public Task<RespuestaDTO<HomeDTO>> ModificarDatosDeHome(HomeModificarDTO homeModificarDTO);
+        Task<RespuestaDTO<TemporadaDTO>> ModificarTemporadaAlta(TemporadaDTO temporadaDTO);
+
+
+        Task<TemporadaDTO> ObtenerTemporadaAlta();
     }
 }

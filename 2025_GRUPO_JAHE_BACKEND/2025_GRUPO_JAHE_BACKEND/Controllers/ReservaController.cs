@@ -1,5 +1,7 @@
 ﻿using Aplicacion.DTOs;
 using Aplicacion.Interfaces;
+using Aplicacion.Servicios;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace _2025_GRUPO_JAHE_BACKEND.Controllers
@@ -91,6 +93,57 @@ namespace _2025_GRUPO_JAHE_BACKEND.Controllers
                 return NotFound();
             }
         }
+        [HttpPost("ListaReservaciones")]
+        public async Task<ActionResult<RespuestaConsultaDTO<DatoReservaDTO>>> ListarReservaciones(ConsultaReservacionesParametrosDTO parametros)
+        {
+            try
+            {
+                var resultado = await reservaServicio.ListarReservaciones(parametros.NumeroDePagina, parametros.MaximoDeDatos, parametros.IrALaUltimaPagina);
 
+                if (resultado == null || !resultado.Lista.Any())
+                    return NotFound("No hay reservas registradas");
+
+                return Ok(resultado);
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, $"Error en el servidor: {ex.Message}");
+            }
+        }
+
+        [HttpDelete("{idReserva}")]
+        public async Task<ActionResult<bool>> EliminarReserva(string idReserva)
+        {
+            try
+            {
+                var resultado = await reservaServicio.EliminarReserva(idReserva);
+
+                if (resultado)
+                    return Ok(true);
+                else
+                    return NotFound("Reserva no encontrada o no pudo ser eliminada");
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, $"Error en el servidor: {ex.Message}");
+            }
+        }
+        [HttpGet("DetalleReservacion/{idReserva}")]
+        public async Task<ActionResult<DatoReservaDTO>> DetalleReservacion(string idReserva)
+        {
+            try
+            {
+                if (string.IsNullOrEmpty(idReserva))
+                    return BadRequest("El ID de reserva no puede ser nulo o vacío");
+                var resultado = await reservaServicio.DetalleReservacion(idReserva);
+                if (resultado == null)
+                    return NotFound("No se encontró la reserva solicitada");
+                return Ok(resultado);
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, $"Error en el servidor: {ex.Message}");
+            }
+        }
     }
 }
