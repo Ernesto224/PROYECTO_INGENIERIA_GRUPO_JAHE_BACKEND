@@ -10,5 +10,6 @@ namespace Dominio.Interfaces
     public interface ITarifasRepositorio
     {
         public Task<IEnumerable<TipoDeHabitacion>> verTarifas();
+        public Task<object> ActualizarTipoDeHabitacion(TipoDeHabitacion tipoDeHabitacion, string? urlImagen);
     }
 }

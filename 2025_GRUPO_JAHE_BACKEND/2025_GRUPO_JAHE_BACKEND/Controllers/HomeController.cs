@@ -41,7 +41,7 @@ namespace _2025_GRUPO_JAHE_BACKEND.Controllers
 
         // PUT api/<HomeController>/5
         [HttpPut]
-        public async Task<ActionResult<object>> Put(HomeModificarDTO homeModificarDTO)
+        public async Task<ActionResult<RespuestaDTO<HomeDTO>>> Put(HomeModificarDTO homeModificarDTO)
         {
             try
             {

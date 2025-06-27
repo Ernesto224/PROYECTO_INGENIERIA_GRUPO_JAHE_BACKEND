@@ -13,11 +13,69 @@ namespace Aplicacion.Servicios
     public class SobreNosotrosServicio: ISobreNosotrosServicio
     {
         private readonly ISobreNosotrosRepositorio _sobreNosotrosRepositorio;
+        private readonly IServicioAlmacenamientoImagenes _servicioAlmacenamientoImagenes;
 
-        public SobreNosotrosServicio(ISobreNosotrosRepositorio sobreNosotrosRepositorio)
+        public SobreNosotrosServicio(ISobreNosotrosRepositorio sobreNosotrosRepositorio, IServicioAlmacenamientoImagenes servicioAlmacenamientoImagenes)
         {
             _sobreNosotrosRepositorio = sobreNosotrosRepositorio;
+            _servicioAlmacenamientoImagenes = servicioAlmacenamientoImagenes;
         }
+
+        public async Task<SobreNosotrosDTO> CambiarImagenGaleriaSobreNosotros(SobreNosotrosModificarDTO galeriaModificarDTO)
+        {
+            string? urlImagen = null;
+
+            if (galeriaModificarDTO.Imagen != null)
+            {
+                urlImagen = await this._servicioAlmacenamientoImagenes
+                    .SubirImagen(galeriaModificarDTO.Imagen, galeriaModificarDTO.NombreArchivo);
+            }
+            var sobreNosotroActualizado = await _sobreNosotrosRepositorio.CambiarImagenGaleriaSobreNosotros(new SobreNosotros
+            {
+                IdSobreNosotros = galeriaModificarDTO.IdSobreNosotros,
+                ImagenesSobreNosotros = new List<Imagen_SobreNosotros>
+               {
+                   new Imagen_SobreNosotros
+                   {
+                       IdImagen = galeriaModificarDTO.IdImagen,
+                       IdSobreNosotros = galeriaModificarDTO.IdSobreNosotros,
+                   }
+               }
+            }, urlImagen);
+
+            return new SobreNosotrosDTO
+            {
+                Descripcion = sobreNosotroActualizado.Descripcion,
+                Imagenes = sobreNosotroActualizado.ImagenesSobreNosotros.
+                Where(imagen => imagen.Imagen != null && imagen.Imagen.Activa)
+                .Select(img => new ImagenDTO
+                {
+                    IdImagen = img.Imagen.IdImagen,
+                    Url = img.Imagen.Ruta
+                }).ToList()
+            };
+        }
+
+        public async Task<SobreNosotrosDTO> CambiarTextoSobreNosotros(SobreNosotrosDTO sobreNosotrosDTO)
+        {
+            var sobreNosotrosActualizado = await _sobreNosotrosRepositorio.CambiarTextoSobreNosotros(new SobreNosotros {
+                Descripcion = sobreNosotrosDTO.Descripcion,
+            });
+
+            return new SobreNosotrosDTO
+            {
+                Descripcion = sobreNosotrosActualizado.Descripcion,
+                Imagenes = sobreNosotrosActualizado.ImagenesSobreNosotros
+                    .Where(imagen => imagen.Imagen != null && imagen.Imagen.Activa)
+                    .Select(img => new ImagenDTO
+                    {
+                        IdImagen = img.Imagen.IdImagen,
+                        Url = img.Imagen.Ruta
+                    }).ToList()
+
+            };
+        }
+
         public async Task<SobreNosotrosDTO> VerDatosSobreNosotros()
         {
             var sobreNosotros = await _sobreNosotrosRepositorio.VerDatosSobreNosotros();
@@ -27,13 +85,14 @@ namespace Aplicacion.Servicios
 
             return new SobreNosotrosDTO
             {
+                idSobreNosotros = sobreNosotros.IdSobreNosotros,
                 Descripcion = sobreNosotros.Descripcion,
                 Imagenes = sobreNosotros.ImagenesSobreNosotros
-                    .Where(i => !i.Imagen.Eliminado)
-                    .Select(i => new ImagenDTO
+                    .Where(imagen => imagen.Imagen != null && imagen.Imagen.Activa)
+                    .Select(img => new ImagenDTO
                     {
-                        IdImagen = i.Imagen.IdImagen,
-                        Url = i.Imagen.Url
+                        IdImagen = img.Imagen.IdImagen, 
+                        Url = img.Imagen.Ruta
                     }).ToList()
             };
         }

@@ -10,5 +10,6 @@ namespace Dominio.Interfaces
     public interface IDireccionRepositorio
     {
         public Task<Direccion> VerDatosDireccion();
+        public Task<Direccion> CambiarTextoComoLlegar(Direccion direccion);
     }
 }

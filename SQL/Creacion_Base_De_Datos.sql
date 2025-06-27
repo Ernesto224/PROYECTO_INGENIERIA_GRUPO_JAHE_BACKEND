@@ -1,30 +1,30 @@
 ﻿USE DB_Pruebas_C08380;
-
 -- Eliminar tablas si existen (para recrearlas limpiamente)
-DROP TABLE IF EXISTS 
+DROP TABLE IF EXISTS
 Imagen_SobreNosotros, 
 Reserva, 
 Transaccion, 
 Cliente, 
-Administrador, 
+Usuario, 
 Habitacion, 
-TipoDeHabitacion, 
+TipoDeHabitacion,
+Imagen,
 Oferta, 
 Publicidad, 
 Facilidades, 
 Home, 
-SobreNosotros, 
-Imagen, 
+SobreNosotros,  
 Direccion, 
-Contacto;
+Contacto,
+Temporada;
 
 -- Tabla Contacto
 CREATE TABLE Contacto (
     IdContacto INT PRIMARY KEY IDENTITY(1,1),
     Telefono1 VARCHAR(15),
     Telefono2 VARCHAR(15),
-    ApartadoPostal VARCHAR(255),
-    Email VARCHAR(255)
+    ApartadoPostal NVARCHAR(255),
+    Email NVARCHAR(MAX)
 );
 
 -- Tabla Direccion
@@ -36,8 +36,8 @@ CREATE TABLE Direccion (
 -- Tabla Imagen
 CREATE TABLE Imagen (
     IdImagen INT PRIMARY KEY IDENTITY(1,1),
-    [Url] NVARCHAR(MAX),
-    Eliminado BIT DEFAULT 0
+    Ruta NVARCHAR(MAX),
+    Activa BIT DEFAULT 1
 );
 
 -- Tabla Home
@@ -57,8 +57,8 @@ CREATE TABLE Facilidades (
 -- Tabla Publicidad
 CREATE TABLE Publicidad (
     IdPublicidad INT PRIMARY KEY IDENTITY(1,1),
-    EnlacePublicidad VARCHAR(255),
-    Activo BIT DEFAULT 1,
+    Enlace NVARCHAR(MAX),
+    Activa BIT DEFAULT 1,
     IdImagen INT FOREIGN KEY REFERENCES Imagen(IdImagen)
 );
 
@@ -78,7 +78,7 @@ CREATE TABLE Imagen_SobreNosotros (
 -- Tabla TipoDeHabitacion
 CREATE TABLE TipoDeHabitacion (
     IdTipoDeHabitacion INT PRIMARY KEY IDENTITY(1,1),
-    Nombre VARCHAR(20),
+    Nombre VARCHAR(100),
     Descripcion NVARCHAR(MAX),
     TarifaDiaria DECIMAL(10,2),
     IdImagen INT FOREIGN KEY REFERENCES Imagen(IdImagen)
@@ -89,14 +89,17 @@ CREATE TABLE Habitacion (
     IdHabitacion INT PRIMARY KEY IDENTITY(1,1),
     Numero INT,
     Estado VARCHAR(10),
+    Activa BIT DEFAULT 1,
+    FechaEstado DATE,
     IdTipoDeHabitacion INT FOREIGN KEY REFERENCES TipoDeHabitacion(IdTipoDeHabitacion)
 );
 
--- Tabla Administrador
-CREATE TABLE Administrador (
-    IdAdmin INT PRIMARY KEY IDENTITY(1,1),
-    NombreDeUsuario VARCHAR(255),
-    Contrasennia VARCHAR(20)
+-- Tabla Usuario (anteriormente IdAdmin cambiado a IdUsuario)
+CREATE TABLE Usuario (
+    IdUsuario INT PRIMARY KEY IDENTITY(1,1),
+    NombreUsuario VARCHAR(100),
+    Contrasennia NVARCHAR(MAX),
+    Rol VARCHAR(100)
 );
 
 -- Tabla Cliente
@@ -104,7 +107,7 @@ CREATE TABLE Cliente (
     IdCliente INT PRIMARY KEY IDENTITY(1,1),
     Nombre VARCHAR(20),
     Apellidos VARCHAR(50),
-    Email VARCHAR(255),
+    Email NVARCHAR(MAX),
     TarjetaDePago VARCHAR(30)
 );
 
@@ -113,7 +116,7 @@ CREATE TABLE Transaccion (
     IdTransaccion INT PRIMARY KEY IDENTITY(1000,1),
     Fecha DATE,
     Monto DECIMAL(10,2),
-    Descripcion VARCHAR(255)
+    Descripcion NVARCHAR(MAX)
 );
 
 -- Tabla Reserva (IdReserva como UNIQUEIDENTIFIER)
@@ -122,7 +125,7 @@ CREATE TABLE Reserva (
     FechaLlegada DATE,
     FechaSalida DATE,
     Estado VARCHAR(10),
-    Activo BIT DEFAULT 1,
+    Activa BIT DEFAULT 1,
     IdCliente INT FOREIGN KEY REFERENCES Cliente(IdCliente),
     IdHabitacion INT FOREIGN KEY REFERENCES Habitacion(IdHabitacion),
     IdTransaccion INT FOREIGN KEY REFERENCES Transaccion(IdTransaccion)
@@ -135,6 +138,19 @@ CREATE TABLE Oferta (
     FechaInicio DATE,
     FechaFinal DATE,
     Porcentaje INT,
+    Activa BIT DEFAULT 1,
     IdTipoDeHabitacion INT FOREIGN KEY REFERENCES TipoDeHabitacion(IdTipoDeHabitacion),
-    Activo BIT DEFAULT 1
+    IdImagen INT FOREIGN KEY REFERENCES Imagen(IdImagen)
 );
+
+-- Tabla Temporada (sin claves foráneas, se aplica de forma general)
+CREATE TABLE Temporada (
+    IdTemporada INT PRIMARY KEY IDENTITY(1,1),
+    Nombre VARCHAR(255),
+    FechaInicio DATE,
+    FechaFinal DATE,
+    Porcentaje INT
+);
+
+
+select * from Habitacion

@@ -16,7 +16,6 @@ namespace Dominio.Entidades
         public int IdHome { get; set; }
 
         [Required]
-        [MaxLength(int.MaxValue)]
         public string Descripcion { get; set; } = string.Empty;
 
         // Clave foránea
