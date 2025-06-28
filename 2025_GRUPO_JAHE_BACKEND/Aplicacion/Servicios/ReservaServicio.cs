@@ -76,7 +76,7 @@ namespace Aplicacion.Servicios
 
                     else
                     {
-                        montoTotal = montoBase; // No se aplica temporada
+                        montoTotal = montoBase;
                     }
 
                         
@@ -138,37 +138,81 @@ namespace Aplicacion.Servicios
             }
         }
 
-        public async Task<HabitacionDTO> VerHabitacionDisponible(ReservaDTO reservaDTO)
+        public async Task<HabitacionDisponibleDTO> VerHabitacionDisponible(ReservaDTO reservaDTO)
         {
-            var habitacion = await _repositorioReserva.VerHabitacionDisponible(reservaDTO.IdTipoDeHabitacion, reservaDTO.FechaLlegada, reservaDTO.FechaSalida);
+            var habitacion = await _repositorioReserva.VerHabitacionDisponible(
+                reservaDTO.IdTipoDeHabitacion,
+                reservaDTO.FechaLlegada,
+                reservaDTO.FechaSalida);
 
-            if(habitacion == null)
+            if (habitacion == null)
             {
                 return null;
             }
 
             var precioHabitacion = habitacion.TipoDeHabitacion.TarifaDiaria;
+            OfertaDTO ofertaAplicableDTO = null;
 
-            var temporada = await _repositorioTemporada.ObtenerTemporadaPorFecha(reservaDTO.FechaLlegada, reservaDTO.FechaSalida);
+            var temporada = await _repositorioTemporada.ObtenerTemporadaPorFecha(
+                reservaDTO.FechaLlegada,
+                reservaDTO.FechaSalida);
 
-            if(temporada != null)
+            if (temporada != null)
             {
                 var calculador = new CalcularPrecioService();
-                precioHabitacion = calculador.AplicarTemporada(habitacion.TipoDeHabitacion.TarifaDiaria, temporada);
-                Console.WriteLine("SE APLICO LA TEMPORADA " + precioHabitacion);
+                precioHabitacion = calculador.AplicarTemporada(precioHabitacion, temporada);
             }
 
-            return new HabitacionDTO
+            var ofertas = await ofertaRepositorio.VerOfertasActivas();
+            Oferta ofertaAplicable = null;
+
+            if (ofertas != null && ofertas.Any())
             {
-                IdHabitacion = habitacion.IdHabitacion,
-                IdTipoDeHabitacion = habitacion.IdTipoDeHabitacion,
-                Numero = habitacion.Numero,
-                TipoDeHabitacion = new TipoDeHabitacionDTO
+                ofertaAplicable = ofertas.FirstOrDefault(o =>
+                    o.IdTipoDeHabitacion == reservaDTO.IdTipoDeHabitacion &&
+                    o.FechaInicio <= reservaDTO.FechaLlegada &&
+                    o.FechaFinal >= reservaDTO.FechaSalida);
+
+                if (ofertaAplicable != null)
                 {
-                    IdTipoDeHabitacion = habitacion.TipoDeHabitacion.IdTipoDeHabitacion,
-                    Nombre = habitacion.TipoDeHabitacion.Nombre,
-                    TarifaDiaria = precioHabitacion
+                    precioHabitacion = precioHabitacion * (1 - (ofertaAplicable.Porcentaje / 100m));
+
+                    ofertaAplicableDTO = new OfertaDTO
+                    {
+                        IdOferta = ofertaAplicable.IdOferta,
+                        Nombre = ofertaAplicable.Nombre,
+                        Porcentaje = ofertaAplicable.Porcentaje,
+                        FechaInicio = ofertaAplicable.FechaInicio,
+                        FechaFinal = ofertaAplicable.FechaFinal,
+                        TipoDeHabitacion = new TipoDeHabitacionDTO
+                        {
+                            IdTipoDeHabitacion = ofertaAplicable.IdTipoDeHabitacion,
+                            Nombre = ofertaAplicable.TipoDeHabitacion.Nombre,
+                            TarifaDiaria = ofertaAplicable.TipoDeHabitacion.TarifaDiaria
+                        },
+                    };
+                }
+            }
+
+            int diasEstadia = (reservaDTO.FechaSalida - reservaDTO.FechaLlegada).Days;
+            decimal precioTotalEstadia = precioHabitacion * diasEstadia;
+
+            return new HabitacionDisponibleDTO
+            {
+                habitacionDTO = new HabitacionDTO
+                {
+                    IdHabitacion = habitacion.IdHabitacion,
+                    IdTipoDeHabitacion = habitacion.IdTipoDeHabitacion,
+                    Numero = habitacion.Numero,
+                    TipoDeHabitacion = new TipoDeHabitacionDTO
+                    {
+                        IdTipoDeHabitacion = habitacion.TipoDeHabitacion.IdTipoDeHabitacion,
+                        Nombre = habitacion.TipoDeHabitacion.Nombre,
+                        TarifaDiaria = precioHabitacion 
+                    },
                 },
+                ofertaDTO = ofertaAplicableDTO,
+                precioTotal = (float)precioTotalEstadia
             };
         }
 

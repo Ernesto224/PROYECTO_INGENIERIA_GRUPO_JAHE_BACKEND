@@ -9,6 +9,8 @@ namespace Aplicacion.Interfaces
 {
     public interface IPublicidadServicio
     {
+        public Task<RespuestaDTO<PublicidadDTO>> ModificarPublicidad(int idPublicidad, PublicidadCrearDTO publicidadModificarDTO);
+        public Task<PublicidadDTO> VerPublicidadPorId(int id);
         public Task<List<PublicidadDTO>> VerPublicidadesActivas();
 
         public Task<RespuestaDTO<PublicidadDTO>> EliminarPublicidad(int idOferta);
