@@ -10,11 +10,8 @@ using System.Threading.Tasks;
 
 namespace Aplicacion.Servicios.Temporizador
 {
-    public class MinutoHostedService : IHostedService, IDisposable
+    public class MinutoHostedService : BackgroundService
     {
-        private bool _isRunning = false;
-
-        private Timer? _timer;
 
         private readonly IServiceProvider _serviceProvider;
 
@@ -24,54 +21,31 @@ namespace Aplicacion.Servicios.Temporizador
             this._serviceProvider = serviceProvider;
         }
 
-        public Task StartAsync(CancellationToken cancellationToken)
+        protected override async Task ExecuteAsync(CancellationToken stoppingToken)
         {
-            _timer = new Timer(
-            callback: DoWork,
-            state: null,
-            dueTime: TimeSpan.Zero,
-            period: TimeSpan.FromMinutes(1));
-
-            return Task.CompletedTask;
-        }
-
-        private async void DoWork(object? state)
-        {
-            if (_isRunning)
-            {
-                return;
-            }
-
-            try
+            while (!stoppingToken.IsCancellationRequested)
             {
                 using (var scope = _serviceProvider.CreateScope())
                 {
-                    var repositorio = scope.ServiceProvider
-                        .GetRequiredService<IHabitacionRepositorio>();
+                    try
+                    {
+                        var repositorio = scope.ServiceProvider
+                            .GetRequiredService<IHabitacionRepositorio>();
 
-                    await Task.Run(() => repositorio.ActualizarHabitacionesOcupadasConTimeout());
+                        repositorio.ActualizarHabitacionesOcupadasConTimeout();
+                        Console.WriteLine($"Tarea Ejecuta: " + DateTime.Now);
+
+                    }
+                    catch (Exception ex)
+                    {
+                        Console.WriteLine($"Error: {ex.Message}");
+                    }
                 }
 
+                await Task.Delay(TimeSpan.FromMinutes(1), stoppingToken);
             }
-            catch (Exception ex)
-            {
-            }
-            finally
-            {
-                _isRunning = false;
-            }
-
         }
 
-        public Task StopAsync(CancellationToken cancellationToken)
-        {
-            _timer?.Change(Timeout.Infinite, 0);
-            return Task.CompletedTask;
-        }
 
-        public void Dispose()
-        {
-            _timer?.Dispose();
-        }
     }
 }
