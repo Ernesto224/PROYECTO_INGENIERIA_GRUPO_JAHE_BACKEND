@@ -9,6 +9,7 @@ namespace Dominio.Interfaces
 {
     public interface IHabitacionRepositorio
     {
+        public void ActualizarHabitacionesOcupadasConTimeout();
         public Task<(IEnumerable<Habitacion> habitaciones, int datosTotales, int paginaActual)> ConsultarDisponibilidadDeHabitaciones(int[] idTiposHabitacion,
             DateTime fechaLlegada, DateTime fechaSalida, int numeroDePagina, int maximoDeDatos, bool irALaUltimaPagina);
 

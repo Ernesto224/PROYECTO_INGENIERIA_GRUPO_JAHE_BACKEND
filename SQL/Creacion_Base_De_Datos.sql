@@ -90,7 +90,7 @@ CREATE TABLE Habitacion (
     Numero INT,
     Estado VARCHAR(10),
     Activa BIT DEFAULT 1,
-    FechaEstado DATE,
+    FechaEstado DATETIME,
     IdTipoDeHabitacion INT FOREIGN KEY REFERENCES TipoDeHabitacion(IdTipoDeHabitacion)
 );
 
