@@ -124,6 +124,11 @@ namespace Infraestructura.Repositorios
                 .Where(h => h.Estado == Dominio.Enumeraciones.EstadoDeHabitacion.OCUPADA.ToString()
                          && h.FechaEstado < limiteTiempo);
 
+            if (!habitacionesPorActualizar.Any())
+            {
+                return;
+            }
+
             foreach (var habitacion in habitacionesPorActualizar)
             {
                 habitacion.Estado = Dominio.Enumeraciones.EstadoDeHabitacion.DISPONIBLE.ToString();
