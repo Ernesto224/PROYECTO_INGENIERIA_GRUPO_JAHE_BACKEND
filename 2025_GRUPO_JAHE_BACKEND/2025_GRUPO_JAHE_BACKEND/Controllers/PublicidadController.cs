@@ -1,5 +1,6 @@
 ﻿using Aplicacion.DTOs;
 using Aplicacion.Interfaces;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace _2025_GRUPO_JAHE_BACKEND.Controllers
