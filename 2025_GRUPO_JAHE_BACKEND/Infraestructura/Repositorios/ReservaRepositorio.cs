@@ -52,9 +52,15 @@ namespace Infraestructura.Repositorios
             }
             else
             {
-                HabitacionDisponible.Estado = EstadoDeHabitacion.OCUPADA.ToString();
-                await this._contexto.SaveChangesAsync();
-                return HabitacionDisponible;
+
+                if(await this.CambiarEstadoHabitacion(HabitacionDisponible.IdHabitacion, EstadoDeHabitacion.OCUPADA.ToString()))
+                {
+                    return HabitacionDisponible;
+                }
+                else
+                {
+                    return null;
+                }
             }
 
         }
@@ -94,6 +100,8 @@ namespace Infraestructura.Repositorios
             var habitacion = await this.VerHabitacion(idHabitacion);
 
             habitacion.Estado = estadoNuevo;
+
+            habitacion.FechaEstado = DateTime.Now;
 
             await this._contexto.SaveChangesAsync();
 

@@ -1,5 +1,6 @@
 using Aplicacion.Interfaces;
 using Aplicacion.Servicios;
+using Aplicacion.Servicios.Temporizador;
 using Dominio.Interfaces;
 using Dominio.Interfaces.Seguridad;
 using Infraestructura.Persistencia;
@@ -59,6 +60,9 @@ builder.Services.AddScoped<IOfertaRepositorio, OfertaRepositorio>();
 builder.Services.AddScoped<IOfertaServicio, OfertaServicio>();
 builder.Services.AddScoped<ITemporadaRepositorio, TemporadaRepositorio>();
 builder.Services.AddScoped<ITemporadaServicio, TemporadaServicio>();
+
+builder.Services.AddHostedService<MinutoHostedService>();
+
 
 
 

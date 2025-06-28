@@ -115,5 +115,28 @@ namespace Infraestructura.Repositorios
                 throw new Exception(ex.Message);
             }
         }
+
+        public void ActualizarHabitacionesOcupadasConTimeout()
+        {
+            var limiteTiempo = DateTime.Now.AddMinutes(-15);
+
+            var habitacionesPorActualizar = _contexto.Habitaciones
+                .Where(h => h.Estado == Dominio.Enumeraciones.EstadoDeHabitacion.OCUPADA.ToString()
+                         && h.FechaEstado < limiteTiempo);
+
+            if (!habitacionesPorActualizar.Any())
+            {
+                return;
+            }
+
+            foreach (var habitacion in habitacionesPorActualizar)
+            {
+                habitacion.Estado = Dominio.Enumeraciones.EstadoDeHabitacion.DISPONIBLE.ToString();
+                habitacion.FechaEstado = DateTime.Now;
+            }
+
+            this._contexto.SaveChanges();
+
+        }
     }
 }
