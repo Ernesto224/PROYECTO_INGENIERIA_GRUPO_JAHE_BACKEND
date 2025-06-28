@@ -21,8 +21,25 @@ INSERT INTO Imagen (Ruta) VALUES
 INSERT INTO Home (Descripcion, IdImagen) 
 VALUES ('Bienvenido al mejor hotel de Costa Rica', 1);
 
+-- 1. Piscina de lujo
 INSERT INTO Facilidades (Descripcion, IdImagen) 
-VALUES ('Piscina climatizada con vista al volcán', 2);
+VALUES ('Piscina infinity climatizada con bordes de cristal que ofrecen una vista espectacular al volcán, equipada con cómodos loungers de lujo, servicio de bebidas y un área de jacuzzi integrado para máximo relax al atardecer', 2);
+
+-- 2. Spa premium
+INSERT INTO Facilidades (Descripcion, IdImagen) 
+VALUES ('Spa "Serenidad Tropical" con 8 cabinas de tratamiento que incluyen masajes con piedras volcánicas, envolturas de chocolate orgánico, terapia de flotación y rituales de belleza con productos locales. Dispone de circuito termal con sauna finlandesa, baño turco y piscina de hidroterapia', 4);
+
+-- 3. Restaurante gourmet
+INSERT INTO Facilidades (Descripcion, IdImagen) 
+VALUES ('Restaurante "Sabores del Pacífico" con cocina de autor dirigida por chef internacional, menú degustación de 7 tiempos, cocina abierta donde se preparan platillos con ingredientes locales orgánicos, y una cava de vinos con más de 200 etiquetas seleccionadas de todo el mundo', 5);
+
+-- 4. Suite presidencial
+INSERT INTO Facilidades (Descripcion, IdImagen) 
+VALUES ('Suite Presidencial "Horizonte Infinito" de 120m² con terraza privada, piscina individual climatizada, sala de estar con chimenea, dormitorio master con vestidor y baño de mármol con jacuzzi para dos, equipada con sistema de domótica y atención de mayordomo 24/7', 7);
+
+-- 5. Centro de negocios
+INSERT INTO Facilidades (Descripcion, IdImagen) 
+VALUES ('Centro Ejecutivo "Productividad Total" con salas de reuniones equipadas con tecnología 4K, videoconferencia holográfica, servicio de traducción simultánea, impresión 3D, barra de café premium y área de networking con diseño ergonómico para trabajo colaborativo', 10);
 
 INSERT INTO Publicidad (Enlace, IdImagen) 
 VALUES ('https://promo.hotel.com', 3);

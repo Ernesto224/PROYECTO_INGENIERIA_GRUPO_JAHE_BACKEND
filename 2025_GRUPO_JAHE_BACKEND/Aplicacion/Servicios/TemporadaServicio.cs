@@ -41,7 +41,7 @@ namespace Aplicacion.Servicios
 
                 return new RespuestaDTO<TemporadaDTO>
                 {
-                    Texto = "Oferta modificada correctamente",
+                    Texto = "Temporada modificada correctamente",
                     EsCorrecto = true,
                     Objeto = null
                 };
@@ -51,7 +51,7 @@ namespace Aplicacion.Servicios
             {
                 return new RespuestaDTO<TemporadaDTO>
                 {
-                    Texto = $"Error modificando oferta: {ex.Message}",
+                    Texto = $"Error modificando la temporada: {ex.Message}",
                     EsCorrecto = false,
                     Objeto = null
                 };
