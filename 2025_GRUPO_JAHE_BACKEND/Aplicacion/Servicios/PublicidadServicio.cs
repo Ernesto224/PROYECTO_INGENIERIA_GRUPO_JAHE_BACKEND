@@ -89,7 +89,7 @@ namespace Aplicacion.Servicios
                         .SubirImagen(publicidadCrearDTO.Imagen, publicidadCrearDTO.NombreArchivo);
                 }
                 else
-                {                     
+                {
                     // Si no se proporciona una imagen, se lanza una excepción
                     throw new Exception("La imagen es obligatoria para crear una publicidad.");
                 }
@@ -123,6 +123,61 @@ namespace Aplicacion.Servicios
                 return new RespuestaDTO<PublicidadDTO>
                 {
                     Texto = $"Error creando publicidad: {ex.Message}",
+                    EsCorrecto = false,
+                    Objeto = null
+                };
+            }
+        }
+
+        public async Task<PublicidadDTO> VerPublicidadPorId(int idPublicidad)
+        {
+            var publicidad = await this._repositorio.VerPubliciadadPorId(idPublicidad);
+            if (publicidad == null)
+                throw new Exception("No se encontró la publicidad.");
+            return new PublicidadDTO
+            {
+                IdPublicidad = publicidad.IdPublicidad,
+                EnlacePublicidad = publicidad.Enlace,
+                Activo = publicidad.Activa,
+                Imagen = new ImagenDTO
+                {
+                    IdImagen = publicidad.Imagen.IdImagen,
+                    Url = publicidad.Imagen.Ruta
+                }
+            };
+        }
+
+        public async Task<RespuestaDTO<PublicidadDTO>> ModificarPublicidad(int idPublicidad, PublicidadCrearDTO publicidadModificarDTO)
+        {
+            try
+            {
+                var publicidad = await this._repositorio.VerPubliciadadPorId(idPublicidad);
+                if (publicidad == null)
+                    throw new Exception("No se encontró la publicidad a modificar.");
+                // Actualizar los campos de la publicidad
+                publicidad.Enlace = publicidadModificarDTO.EnlacePublicidad;
+                // Si se proporciona una nueva imagen, actualizarla
+                if (publicidadModificarDTO.Imagen != null)
+                {
+                    string urlImagen = await this._servicioAlmacenamientoImagenes
+                        .SubirImagen(publicidadModificarDTO.Imagen, publicidadModificarDTO.NombreArchivo);
+                    publicidad.Imagen.Ruta = urlImagen;
+                }
+                // Guardar los cambios en el repositorio
+                await this._repositorio.UpdateAsync(publicidad);
+                var resultado = await this._unitOfWork.SaveChangesAsync();
+                return new RespuestaDTO<PublicidadDTO>
+                {
+                    Texto = "Publicidad modificada correctamente",
+                    EsCorrecto = true,
+                    Objeto = null
+                };
+            }
+            catch (Exception ex)
+            {
+                return new RespuestaDTO<PublicidadDTO>
+                {
+                    Texto = $"Error modificando la publicidad: {ex.Message}",
                     EsCorrecto = false,
                     Objeto = null
                 };

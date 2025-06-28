@@ -13,7 +13,7 @@ namespace Aplicacion.Interfaces
     {
         public Task<List<string>> RealizarReserva(List<ReservaDTO> reservaDTO, ClienteDTO clienteDTO);
 
-        public Task<HabitacionDTO> VerHabitacionDisponible(ReservaDTO reservaDTO);
+        public Task<HabitacionDisponibleDTO> VerHabitacionDisponible(ReservaDTO reservaDTO);
 
         public Task<IEnumerable<AlternativaDeReservaDTO>> VerAlternativasDisponibles(ReservaDTO reservaDTO);
 

@@ -35,6 +35,24 @@ namespace _2025_GRUPO_JAHE_BACKEND.Controllers
             }
         }
 
+        [HttpGet("{idPublicidad}")]
+        public async Task<ActionResult<PublicidadDTO>> Get(int idPublicidad)
+        {
+            try
+            {
+                var publicidadDTO = await this._publicidadServicio.VerPublicidadPorId(idPublicidad);
+                if (publicidadDTO == null)
+                {
+                    return NotFound("No se encontró la publicidad.");
+                }
+                return Ok(publicidadDTO);
+            }
+            catch (Exception ex)
+            {
+                return NotFound(ex.Message);
+            }
+        }
+
         [HttpDelete("{idPublicidad}")]
         public async Task<ActionResult<RespuestaDTO<PublicidadDTO>>> Delete(int idPublicidad)
         {
@@ -63,6 +81,24 @@ namespace _2025_GRUPO_JAHE_BACKEND.Controllers
                 if (respuesta == null)
                 {
                     return NotFound("No se pudo crear la publicidad.");
+                }
+                return Ok(respuesta);
+            }
+            catch (Exception ex)
+            {
+                return NotFound(ex.Message);
+            }
+        }
+
+        [HttpPut("{idPublicidad}")]
+        public async Task<ActionResult<RespuestaDTO<PublicidadDTO>>> Put(int idPublicidad, PublicidadCrearDTO publicidadModificarDTO)
+        {
+            try
+            {
+                RespuestaDTO<PublicidadDTO> respuesta = await this._publicidadServicio.ModificarPublicidad(idPublicidad, publicidadModificarDTO);
+                if (respuesta == null)
+                {
+                    return NotFound("No se pudo modificar la publicidad.");
                 }
                 return Ok(respuesta);
             }

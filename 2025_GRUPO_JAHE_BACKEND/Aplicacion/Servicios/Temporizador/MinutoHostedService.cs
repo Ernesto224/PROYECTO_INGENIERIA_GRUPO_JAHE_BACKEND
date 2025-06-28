@@ -33,8 +33,6 @@ namespace Aplicacion.Servicios.Temporizador
                             .GetRequiredService<IHabitacionRepositorio>();
 
                         repositorio.ActualizarHabitacionesOcupadasConTimeout();
-                        Console.WriteLine($"Tarea Ejecuta: " + DateTime.Now);
-
                     }
                     catch (Exception ex)
                     {
