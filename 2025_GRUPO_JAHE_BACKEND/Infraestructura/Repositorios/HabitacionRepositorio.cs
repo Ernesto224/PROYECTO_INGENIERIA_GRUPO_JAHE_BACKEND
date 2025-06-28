@@ -135,7 +135,7 @@ namespace Infraestructura.Repositorios
                 habitacion.FechaEstado = DateTime.Now;
             }
 
-            this._contexto.SaveChangesAsync();
+            this._contexto.SaveChanges();
 
         }
     }
